@@ -1,6 +1,7 @@
 ---
 services:
   php:
+    init: true
     restart: unless-stopped
     depends_on:
       database:
