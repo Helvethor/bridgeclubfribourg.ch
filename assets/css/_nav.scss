@@ -1,0 +1,35 @@
+nav
+{
+
+	ul
+	{
+		&.pagination
+		{	
+			margin: 0;
+		}	
+	}
+
+	&.calendar-nav
+	{
+		text-align: center;
+		margin: $fix-lg 0;
+	}
+}
+
+div.turnamentNavigation
+{
+	text-align: center;
+	/*margin-top: $fix-lg;
+	margin-bottom: $fix-lg;*/
+
+	h2
+	{
+		margin: 0;
+		a.btn {
+			font-size: $fix-md !important;
+		}
+	}
+}
+
+.files-btn {
+}

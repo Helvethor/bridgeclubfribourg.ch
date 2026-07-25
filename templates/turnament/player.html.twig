@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% set turnament = player.turnament %}
+
+{% block title %}
+        Joueurs
+{% endblock %}
+
+
+{% block content %}
+
+{% if player is empty %}
+	<h1>Joueurs</h1>
+	<div class='padded-content'>
+		<p>Aucun résultat n'est disponible sur cette page.</p>
+	</div>
+{% else %}
+
+<h1>Joueur n°{{ player.no }}, {{ turnament.date | frenchDate('full') }}</h1>
+
+<h2>
+	{{ player.person.fullName }}, 
+</h2>
+
+<div class='print-hidden padded-content'>
+
+	{% include 'turnament/navigation.html.twig' with { 'turnament': turnament } %}
+
+
+	<div class='row margin-lg'>
+	<div class='col-sm-8 offset-sm-2'>
+	<div class='form-group'>
+		<select class='form-control select-redirect'>
+					
+			{% for selectPlayer in turnament.sortedPlayers %}
+				
+					<option value='{{
+						path(
+							'turnament_player',
+							{
+								'day': selectPlayer.turnament.date | date ( 'd' ),
+								'month': selectPlayer.turnament.date | date ( 'm' ),
+								'year': selectPlayer.turnament.date | date ( 'Y' ),
+								'no': selectPlayer.no
+							}
+						)
+					}}'
+					{% if player == selectPlayer %}selected='selected'{% endif %}>
+						{{ selectPlayer.no }} | {{ selectPlayer.person.fullName }}
+					</option>
+
+			{% endfor %}
+
+		</select>
+	</div>
+	</div>
+	</div>
+
+    <a href='{{ path('pdf', { url: app.request.uri | url_encode }) }}' class='btn btn-outline-primary font-weight-bold' role='button'>Imprimer</a>
+
+    <br>
+    <br>
+</div>
+
+<div class='table-responsive padded-content'>
+<table class='table'>
+
+	<thead>
+
+		<tr>
+            <th>Donne</th>
+            <th>NS</th>
+            <th>EO</th>
+            <th>Contrat</th>
+            <th>Par</th>
+            <th>Ent.</th>
+            <th>Res.</th>
+            <th>Score NS</th>
+            <th>Score EO</th>
+            <th>Joueur {{ player.no }} %</th>
+            <th>Moyenne %</th>
+		</tr>
+		
+	</thead>
+	<tbody>
+
+		{% for confrontation in player.confrontations %}
+
+			{% set group = cycle(['odd', 'even'], loop.index0) %}
+
+			{% for view in confrontation.views %}
+
+				{% set board = view.board %}
+				
+				{% if loop.index0 == 0 %}
+
+					<tr class='{{ group }}'>
+                        {% include 'misc/table-btn.html.twig' with {
+                            'link': path('turnament_board', {
+                                'day': turnament.date | date ( 'd' ),
+                                'month': turnament.date | date ( 'm' ),
+                                'year': turnament.date | date ( 'Y' ),
+                                'no': board.no
+                            }),
+                            'content': board.no
+                        } %}
+
+                        <td rowspan="{{ confrontation.continuity }}">
+                            {{ view.pairNS.players[0].person.fullName }}
+                            <br>
+                            {{ view.pairNS.players[1].person.fullName }}
+                        </td>
+                        <td rowspan="{{ confrontation.continuity }}">
+                            {{ view.pairEO.players[0].person.fullName }}
+                            <br>
+                            {{ view.pairEO.players[1].person.fullName }}
+                        </td>
+
+						<td class='suit-pretty'>
+							{{ board.contract }}
+						</td>
+						<td>
+							{{ board.leader }}
+						</td>
+						<td class='suit-pretty'>
+							{{ board.lead }}
+						</td>
+						<td>
+							{{ board.result }}
+						</td>
+                        <td>
+                            {{ view.scoreNS }}
+                        </td>
+                        <td>
+                            {{ view.scoreEO }}
+                        </td>
+						<td>
+							{{ view.pairPoints | number_format(2) }}%
+						</td>
+						<td rowspan="{{ confrontation.continuity }}">
+							{{ confrontation.average | number_format(2) }}%
+						</td>
+					</tr>
+
+				{% else %}
+
+					<tr class='{{ group }}'>
+                        {% include 'misc/table-btn.html.twig' with {
+                            'link': path('turnament_board', {
+                                'day': turnament.date | date ( 'd' ),
+                                'month': turnament.date | date ( 'm' ),
+                                'year': turnament.date | date ( 'Y' ),
+                                'no': board.no
+                            }),
+                            'content': board.no
+                        } %}
+						<td class='suit-pretty'>
+							{{ board.contract }}
+						</td>
+						<td>
+							{{ board.leader }}
+						</td>
+						<td class='suit-pretty'>
+							{{ board.lead }}
+						</td>
+						<td>
+							{{ board.result }}
+						</td>
+						<td>
+							{{ view.scoreNS }}
+						</td>
+						<td>
+							{{ view.scoreEO }}
+						</td>
+						<td>
+							{{ view.pairPoints | number_format(2) }}%
+						</td>
+					</tr>	
+
+				{% endif %}
+
+			{% endfor %}
+
+		{% endfor %}
+
+	</tbody>
+
+</table>
+</div>
+
+{% endif %}
+
+{% endblock %}

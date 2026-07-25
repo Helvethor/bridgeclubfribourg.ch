@@ -1,0 +1,11 @@
+<div id='menu' class='col-lg-3 col-xl-2 offset-xl-1 sidebar'>
+
+	{% if noMenu is not defined %}
+		{{ knp_menu_render('main') }}
+
+		{% if app.user and is_granted('ROLE_ADMIN') %}
+			{{ knp_menu_render('admin') }}	
+		{% endif %}
+	{% endif %}
+
+</div>

@@ -1,0 +1,18 @@
+    <div class='form-group mb-4'>
+        <label for='filesGroup' class='form-label'>Fichiers</label>
+        <div id='filesGroup' class='d-block'>
+        <div class='btn-group' role='group' aria-label='Fichiers'>
+            <a href='{{ path('pdf', { url: app.request.uri | url_encode }) }}' class='btn btn-outline-primary' role='button'>Imprimer</a>
+
+            {% if turnament is defined %}
+                {% if turnament.getCustomFileUrl() %}
+                    <a target="_blank" href='{{ turnament.getCustomFileUrl() }}' class='btn btn-outline-primary' role='button'>Fichier des donnes</a>
+                {% endif %}
+
+                {% if turnament.getXLSFileUrl() %}
+                    <a target="_blank" href='{{ turnament.getXLSFileUrl() }}' class='btn btn-outline-primary' role='button'>Fichier du tournois</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        </div>
+</div>

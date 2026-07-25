@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Connexion
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ block('title') }}</h1>
+
+<div class='padded-content'>
+
+    <form action="{{ path('login') }}" method="post" class='card p-3 bg-light'>
+        <div class='row gy-3'>    
+            <div class='col-12 col-sm-6 col-xl-4'>
+                <div class='form-group'>
+                    <label for="username" class='form-label'>Nom d'utilisateur</label>
+                    <input type="text" id="username" name="_username" value="{{ lastUsername }}" class='form-control'/>
+                </div>
+            </div>
+
+            <div class='col-12 col-sm-6 col-xl-4'>
+                <div class='form-group'>
+                    <label for="password" class='form-label'>Mot de passe</label>
+                    <input type="password" id="password" name="_password" class='form-control'/>
+                </div>
+            </div>  
+            <div class='col-12'>
+                <button class='btn btn-primary' type="submit">login</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

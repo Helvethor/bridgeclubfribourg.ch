@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Résultats
+{% endblock %}
+
+
+{% block content %}
+
+{% if turnament is  empty %}
+	<h1>Résultats</h1>
+    <div class='padded-content'>
+        <p>Aucun résultat n'est disponible sur cette page.</p>
+    </div>
+{% else %}
+
+<h1>Résultats, {{ turnament.date | frenchDate('full') }}</h1>
+
+<div class='print-hidden padded-content'>
+	{% include 'turnament/navigation.html.twig' with { 'turnament': turnament } %}
+    {% include 'turnament/files.html.twig' with { 'turnament': turnament } %}
+</div>
+
+<div class='table-responsive padded-content'>
+<table class='table table-striped table-sortable'>
+	<thead>
+
+		{% if turnament.type == '%' %}
+
+			<tr>
+				<th>Rang</th>
+                {% if turnament.isIndividual %}
+				    <th>N° joueur</th>
+                    <th class='sorttable_nosort'>Joueur</th>
+                {% else %}
+				    <th>N° paire</th>
+                    <th class='sorttable_nosort' colspan="2">Joueurs</th>
+                {% endif %}
+				<th>MP</th>
+				<th>%</th>
+				<th>PV</th>
+			</tr>
+
+		{% else %}
+
+			<tr>
+				<th>Rang</th>
+                {% if turnament.isIndividual %}
+                    <th class='sorttable_nosort'>N° joueur</th>
+                    <th>Joueur</th>
+                {% else %}
+                    <th class='sorttable_nosort'>N° paire</th>
+                    <th colspan="2">Joueurs</th>
+                {% endif %}
+				<th>IMP</th>
+				<th>IMP/D</th>
+				<th>PV</th>
+			</tr>
+
+		{% endif %}
+
+	</thead>
+	<tbody>
+
+        {% if turnament.isIndividual %}
+            {% for player in turnament.players %}
+
+                <tr>
+            
+                    <td>{{ player.rank }}</td>
+                    {% include 'misc/table-btn.html.twig' with {
+                        'link': path('turnament_player', {
+                            'day': player.turnament.date | date( 'd' ),
+                            'month': player.turnament.date | date( 'm' ),
+                            'year': player.turnament.date | date( 'Y' ),
+                            'no': player.no
+                        }),
+                        'content': player.no
+                    } %}
+                    <td>{{ player.person.fullName }}</td>
+                    <td>{{ player.mp }}</td>
+                    <td>{{ player.result }}</td>
+                    <td>{{ player.pv }}</td>
+
+                </tr>
+
+            {% endfor %}
+        {% else %}
+            {% for pair in turnament.pairs %}
+
+                <tr>
+            
+                    <td>{{ pair.rank }}</td>
+                    {% include 'misc/table-btn.html.twig' with {
+                        'link': path('turnament_pair', {
+                            'day': pair.turnament.date | date( 'd' ),
+                            'month': pair.turnament.date | date( 'm' ),
+                            'year': pair.turnament.date | date( 'Y' ),
+                            'no': pair.no
+                        }),
+                        'content': pair.no 
+                    } %}
+                    <td>{{ pair.players[0].person.fullName }}</td>
+                    {% if not turnament.isIndividual %}
+                        <td>{{ pair.players[1].person.fullName() }}</td>
+                    {% endif %}
+                    <td>{{ pair.mp }}</td>
+                    <td>{{ pair.result }}</td>
+                    <td>{{ pair.pv }}</td>
+
+                </tr>
+
+            {% endfor %}
+        {% endif %}
+
+	</tbody>
+</table>
+</div>
+
+{% endif %}
+
+{% endblock %}

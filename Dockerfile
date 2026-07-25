@@ -20,14 +20,19 @@ WORKDIR /app
 RUN <<-EOF
 	apt-get update
 	apt-get install -y --no-install-recommends \
+		chromium \
 		file \
-		git
+		git \
+		nodejs \
+		npm
+	PUPPETEER_SKIP_DOWNLOAD=1 npm install -g puppeteer@22
 	install-php-extensions \
 		@composer \
 		apcu \
 		intl \
 		opcache \
-		zip
+		zip \
+		gd
 	rm -rf /var/lib/apt/lists/*
 EOF
 
@@ -37,6 +42,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 
 ###> recipes ###
+###> doctrine/doctrine-bundle ###
+RUN install-php-extensions pdo_pgsql
+###< doctrine/doctrine-bundle ###
 ###< recipes ###
 
 COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
@@ -102,7 +110,7 @@ RUN <<-'EOF'
 	apt-get update
 	apt-get install -y --no-install-recommends libtree
 	mkdir -p /tmp/libs
-	BINARIES=(frankenphp php file)
+	BINARIES=(frankenphp php file node npm chromium)
 	for target in $(printf '%s\n' "${BINARIES[@]}" | xargs -I{} which {}) \
 		$(find "$(php -r 'echo ini_get("extension_dir");')" -maxdepth 2 -name "*.so"); do
 		libtree -pv "$target" 2>/dev/null | grep -oP '(?:── )\K/\S+(?= \[)' | while IFS= read -r lib; do
@@ -123,6 +131,11 @@ ENV PHP_INI_SCAN_DIR=":/usr/local/etc/php/app.conf.d"
 COPY --from=frankenphp_prod_builder /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 COPY --from=frankenphp_prod_builder /usr/local/bin/php /usr/local/bin/php
 COPY --from=frankenphp_prod_builder /usr/local/bin/docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
+COPY --from=frankenphp_prod_builder /usr/bin/chromium /usr/bin/chromium
+COPY --from=frankenphp_prod_builder /usr/bin/node /usr/bin/node
+COPY --from=frankenphp_prod_builder /usr/bin/npm /usr/bin/npm
+COPY --from=frankenphp_prod_builder /usr/lib/chromium /usr/lib/chromium
+COPY --from=frankenphp_prod_builder /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY --from=frankenphp_prod_builder /usr/local/lib/php/extensions /usr/local/lib/php/extensions
 COPY --from=frankenphp_prod_builder /tmp/libs /usr/lib
 
@@ -137,6 +150,9 @@ COPY --from=frankenphp_prod_builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/
 COPY --from=frankenphp_prod_builder /etc/ssl/openssl.cnf /etc/ssl/openssl.cnf
 COPY --from=frankenphp_prod_builder /usr/bin/file /usr/bin/file
 COPY --from=frankenphp_prod_builder /usr/lib/file/magic.mgc /usr/lib/file/magic.mgc
+COPY --from=frankenphp_prod_builder /usr/share/fonts /usr/share/fonts
+COPY --from=frankenphp_prod_builder /usr/share/fontconfig /usr/share/fontconfig
+COPY --from=frankenphp_prod_builder /etc/fonts /etc/fonts
 
 ENV  OPENSSL_CONF=/etc/ssl/openssl.cnf XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 

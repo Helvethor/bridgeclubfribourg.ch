@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Gestion des news
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ block('title') }}</h1>
+
+{% if form.vars.value.id is null %}
+	<h2>Ajouter une news</h2>
+{% else %}
+	<h2>Modifier une news</h2>
+{% endif %}
+
+<div class='padded-content'>
+
+    {{ form_start(form, {'attr': {'class': 'card p-3 bg-light'}}) }}
+    <div class='row'>
+        <div class='col-12'>
+            {{ form_row(form.title) }}
+        </div>
+        <div class='col-12'>
+            {{ form_row(form.content) }}
+        </div>
+        <div class='col-12'>
+            {{ form_row(form.date) }}
+        </div>
+        <div class='col-12'>
+            {{ form_widget(form.send) }}
+        </div>
+        {{ form_help(form) }}
+    </div>
+    {{ form_end(form) }}
+
+</div>
+
+{% if newz is not empty %}
+
+<h2>Liste des news</h2>
+
+<div class='table-responsive padded-content'>
+<table class='table table-striped dataTable'>
+    
+    <thead>
+        <tr>
+            <th>Date</th>	
+            <th>Titre</th>	
+            <th>Contenu</th>	
+            <th>Supprimer</th>	
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for news in newz %}
+
+        <tr>
+            {% include 'misc/table-btn.html.twig' with {
+                'link': path(
+                    'admin_news',
+                    { 'id': news.id }
+                ),
+                'content': news.date | date('d/m/Y')
+            } %}
+            <td>{{ news.title }}</td>
+            <td class='left-align'>{{ news.content | nl2br }}</td>
+            <td>
+                <form method='POST' action="{{ path( 'admin_news_delete', { id: news.id } ) }}">
+                    <input class='btn btn-danger' type='submit' value='X'>	
+                </form>
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+
+</table>
+</div>
+
+{% endif %}
+
+{% endblock %}

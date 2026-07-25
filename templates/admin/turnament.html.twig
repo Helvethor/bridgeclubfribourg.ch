@@ -1,0 +1,150 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Gestion des tournois
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ block('title') }}</h1>
+
+<h2>Ajouter un tournoi</h2>
+
+<div class='padded-content'>
+
+    <p>Vous pouvez ajouter un tournois en fournissant le fichier .xls créé par RuderSyv.</p>
+    <p>Le nom du fichier doit contenir la date à laquelle le tournois a été joué au format suivant : jj.mm.aaaa</p>
+
+
+    {{ form_start(turnamentFileForm, {'attr': {'class': 'card p-3 bg-light'}}) }}
+    <div class='row mb-3'>
+        <div class='col-xl-5 col-lg-6 col-md-8 col-sm-10'>
+            <label class="form-label" for="form_turnamentFile">Fichier de tournois</label>
+            {{ form_widget(turnamentFileForm.turnamentFile) }}
+        </div>
+        </div>
+    <div class='row'>
+        <div class='col-12 col-md-2'>
+            {{ form_widget(turnamentFileForm.submit, {'attr': {'class': 'btn-primary'}}) }}
+        </div>
+    </div>
+    {{ form_end(turnamentFileForm) }}
+
+</div>
+
+<h2>Ajouter un fichier de donnes</h2>
+
+<div class='padded-content'>
+
+    <p>Vous pouvez ajouter un fichier de donnes à un tournois spécifique.</p>
+    <p>Sélectionnez le tournois dans le menu déroulant, choisissez le fichier, puis cliquez sur 'Envoyer'</p>
+
+    {{ form_start(turnamentBoardFileForm, {'attr': {'class': 'card p-3 bg-light'}}) }}
+    <div class='row gy-3'>
+        <div class='col-12 col-sm-6 col-md-5'>
+            <label class='form-label' for='form_turnament'>Tournois</label>
+            {{ form_widget(turnamentBoardFileForm.turnament) }}
+        </div>
+        <div class='col-12 col-sm-6 col-md-5'>
+            <label class="form-label" for="form_turnamentBoardFile">Fichier de donnes</label>
+            {{ form_widget(turnamentBoardFileForm.turnamentBoardFile) }}
+        </div>
+        <div class='col-12'>
+            {{ form_widget(turnamentBoardFileForm.submit,
+                {'attr': {'class': 'btn-primary'}}) }}
+        </div>
+    </div>
+    {{ form_end(turnamentBoardFileForm) }}
+
+</div>
+
+<h2>Ajouter un tournoi externe</h2>
+
+<div class='padded-content'>
+
+    <p>Vous pouvez ajouter un tournois joué sur un site externe en fournissant l'URL (le lien) des résultats.</p>
+    <p>Vous devez saisir manuellement la date à laquelle a été joué le tournois.</p>
+
+    {{ form_start(externalLinkForm, {'attr': {'class': 'card p-3 bg-light'}}) }}
+    <div class='row mb-3 gy-3'>
+        <div class='col-12 col-sm-5 col-xl-4'>
+            {{ form_label(externalLinkForm.date) }}
+            {{ form_widget(externalLinkForm.date) }}
+        </div>
+        <div class='col-12 col-sm-7 col-xl-8'>
+            {{ form_label(externalLinkForm.externalLink) }}
+            {{ form_widget(externalLinkForm.externalLink,
+                {'attr': {'placeholder': 'https://...'}}) }}
+        </div>
+    </div>
+    <br>
+    <div class='row'>
+        <div class='col-12'>
+            {{ form_widget(externalLinkForm.submit, {'attr': {'class': 'btn-primary'}}) }}
+        </div>
+    </div>
+    {{ form_end(externalLinkForm) }}
+
+</div>
+
+<h2>Liste des tournois</h2>
+
+<div class='padded-content'>
+
+    {% if turnaments is not empty %}
+
+    <div class='table-responsive'>
+    <table class='table table-striped dataTable'>
+
+        <thead>
+            <tr>
+                <th>Id</th><th>Date</th><th>Fichiers</th><th>Supprimer</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for turnament in turnaments %}
+            <tr>
+                <td>{{ turnament.id }}</td>
+                {% if turnament.isExternal %}
+                    <td>{{ turnament.date | date('d') }}/{{ turnament.date | date('m') }}/{{ turnament.date | date('Y') }}
+                    </td>
+                    <td>
+                        <a href='{{ turnament.externalLink }}'>lien externe</a>
+                    </td>
+                {% else %}
+                    {% include 'misc/table-btn.html.twig' with {
+                        'link': path('turnament_result', {
+                            'day': turnament.date | date( 'd' ),
+                            'month': turnament.date | date( 'm' ),
+                            'year': turnament.date | date( 'Y' ),
+                        }),
+                        'content': turnament.date | date('d/m/Y')
+                    } %}
+                    <td>
+                        <a href='{{ turnament.getFilesUrl().xlsFile }}'>full-xls</a>
+                        <a href='{{ turnament.getFilesUrl().csvPairFile }}'>pair-csv</a>
+                        <a href='{{ turnament.getFilesUrl().csvBoardFile }}'>board-csv</a>
+                        {% if turnament.getCustomFileUrl() %}
+                            <a href='{{ turnament.getCustomFileUrl() }}'>donnes</a>
+                        {% endif %}
+                    </td>
+                {% endif %}
+                <td>
+                    <form method='POST' action="{{ url( 'admin_turnament_delete', { id: turnament.id } ) }}">
+                        <input class='btn btn-danger' type='submit' value='X'>	
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+    </div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

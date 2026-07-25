@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	{{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class='padded-content'>
+
+	{% if page.content is not defined or page.content is empty %}
+		<p>Aucun contenu disponible.</p>
+	{% else %}
+		{{ page.content | raw }}
+	{% endif %}
+
+</div>
+
+{% endblock %}

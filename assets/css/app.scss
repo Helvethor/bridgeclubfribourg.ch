@@ -1,0 +1,68 @@
+/* App vars */
+
+$unit: 14px;
+
+$gray-base:              #000;
+$gray-darker:            #222222; // lighten($gray-base, 13.5%)
+$gray-dark:              #333333; // lighten($gray-base, 20%)
+$gray:                   #555555; // lighten($gray-base, 33.5%)
+$gray-light:             #777777; // lighten($gray-base, 46.7%)
+$gray-lighter:           #eeeeee; // lighten($gray-base, 93.5%)
+
+$green: #006E58;
+$green: #207160;
+$red: #B40000;
+$white: #FFF;
+$black: #000;
+$black: #424242;
+
+$pad-xs: 0.2em;
+$pad-sm: 0.5em;
+$pad-md: 1em;
+$pad-lg: 2em;
+$pad-xl: 3em;
+
+$fix-xs: $unit * 0.75; 
+$fix-sm: $unit * 1; 
+$fix-md: $unit * 1.5; 
+$fix-lg: $unit * 2; 
+$fix-xl: $unit * 3; 
+
+
+/* Bootstrap-sass overrides */
+
+/*$font-family-serif: serif, Lucida Grande, Verdana, sans-serif;*/
+$font-family-serif: Georgia, serif;
+$font-family-sans-serif: Verdana, Arial, Helvetica, sans-serif;
+$font-family-base: $font-family-serif;
+$font-size-base: 0.85rem;
+
+$body-bg: #F5F5F5;
+$primary: $green;
+$secondary: $red;
+/*$text-color: $gray-darker;*/
+
+$table-accent-bg: $gray-lighter;
+
+/* Imports */
+
+@import "_georgia-embedded.scss";
+@import "~bootstrap/scss/bootstrap";
+@import "~datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+/* TinyMCE 6 handles its own styling */
+/* @import "~tinymce/skins/lightgray/content.min.css"; */
+/* @import "~tinymce/skins/lightgray/skin.min.css"; */
+@import "_media.scss";
+@import "_global.scss";
+@import "_menu.scss";
+@import "_sidebar.scss";
+@import "_header.scss";
+@import "_alert.scss";
+@import "_table.scss";
+@import "_nav.scss";
+@import "_form.scss";
+@import "_event.scss";
+@import "_registrations.scss";
+@import "_content.scss";
+@import "_footer.scss";
+@import "_print.scss";;

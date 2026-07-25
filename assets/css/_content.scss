@@ -1,0 +1,18 @@
+#content {
+
+    padding: 0;
+    
+    > div {
+        margin: $fix-lg;
+        
+        > div[class='row']{
+            margin: -$fix-lg;
+        }
+
+
+    }
+    
+    div .padded-content {
+            padding: 0 $spacer;
+        }
+}

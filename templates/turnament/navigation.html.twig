@@ -1,0 +1,68 @@
+<div class='row turnamentNavigation mb-4 gy-3'>
+
+	<div class='col-sm-4'>
+		<h2><a class='btn btn-outline-primary {{ app.request.attributes.get('_route') == 'turnament_result' ? 'active' }}' href='{{
+			path(
+				'turnament_result',
+				{
+					'day': turnament.date | date( 'd' ),
+					'month': turnament.date | date( 'm' ),
+					'year': turnament.date | date( 'Y' ),
+				}
+			)
+		}}'>
+			Résultats
+		</a></h2>
+	</div>
+
+    {% if turnament.isIndividual %}
+        <div class='col-sm-4'>
+            <h2><a class='btn btn-outline-primary {{ app.request.attributes.get('_route') == 'turnament_player' ? 'active' }}' href='{{
+                path(
+                    'turnament_player',
+                    {
+                        'day': turnament.date | date( 'd' ),
+                        'month': turnament.date | date( 'm' ),
+                        'year': turnament.date | date( 'Y' ),
+                        'no': turnament.players[0].no,
+                    }
+                )
+            }}'>
+                Joueurs
+            </a></h2>
+        </div>
+    {% else %}
+        <div class='col-sm-4'>
+            <h2><a class='btn btn-outline-primary {{ app.request.attributes.get('_route') == 'turnament_pair' ? 'active' }}' href='{{
+                path(
+                    'turnament_pair',
+                    {
+                        'day': turnament.date | date( 'd' ),
+                        'month': turnament.date | date( 'm' ),
+                        'year': turnament.date | date( 'Y' ),
+                        'no': turnament.pairs[0].no,
+                    }
+                )
+            }}'>
+                Paires
+            </a></h2>
+        </div>
+    {% endif %}
+
+    <div class='col-sm-4'>
+		<h2><a class='btn btn-outline-primary {{ app.request.attributes.get('_route') == 'turnament_board' ? 'active' }}' href='{{
+			path(
+				'turnament_board',
+				{
+					'day': turnament.date | date( 'd' ),
+					'month': turnament.date | date( 'm' ),
+					'year': turnament.date | date( 'Y' ),
+					'no' : turnament.boards[0].no
+				}
+			)
+		}}'>
+			Donnes
+		</a></h2>
+	</div>
+
+</div>

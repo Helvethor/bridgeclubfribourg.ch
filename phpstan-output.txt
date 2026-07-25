@@ -1,0 +1,2 @@
+Note: Using configuration file /app/phpstan.dist.neon.
+Path /app/tests does not exist

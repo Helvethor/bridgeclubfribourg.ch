@@ -1,0 +1,86 @@
+/* All devices */
+
+#pre-header
+{
+	
+	height: $fix-lg;
+
+	div
+	{
+		background: $white;
+	}
+}
+
+#header
+{
+	color: $white;
+	background-color: $green;
+
+	.row
+	{
+		height: $fix-lg * 6;
+	}
+
+	#logo
+	{
+		background-color: $white;
+		img
+		{
+			display: block;
+			margin: $fix-lg auto $fix-lg auto;
+
+			width: $fix-lg * 4;
+			height: $fix-lg * 4;
+		}
+	}
+
+	#title
+	{
+		h1
+		{
+			color: $white;
+			font-size: $fix-lg * 1.5;
+			text-align: right;	
+
+			line-height: $fix-lg * 2;
+			margin: $fix-lg $fix-lg $fix-lg 0;
+		}
+	}
+}
+
+/* Small screens and down (<768px, legacy xs behavior) */
+
+@include media-breakpoint-down(md)
+{
+
+	#header
+	{
+		.row
+		{
+			height: $fix-md * 6;
+		}
+
+		#logo
+		{
+			img
+			{
+				margin: $fix-md auto $fix-md auto;
+
+				width: $fix-md * 4;
+				height: $fix-md * 4;
+			}
+		}
+
+		#title
+		{
+			h1
+			{
+				font-size: $fix-lg;
+
+				line-height: $fix-md * 2;
+				margin: $fix-md $fix-md $fix-md 0;
+			}
+		}
+	}
+}
+

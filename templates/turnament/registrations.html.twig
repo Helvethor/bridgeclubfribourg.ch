@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Inscriptions
+{% endblock %}
+
+
+{% block content %}
+
+<h1>
+    Inscriptions, {{ date | frenchDate('full') }}
+    {% if board is not empty %}
+        à {{ board.time | date('H:i') }}
+    {% endif %}
+</h1>
+
+{% if board is empty %}
+    <div class='padded-content'>
+        <p>Les inscriptions ne sont pas ouvertes pour cette date.</p>
+    </div>
+{% else %}
+
+{% if board.registrations is not empty %}
+    <h2>Personnes inscrites</h2>
+
+    <div class='row gy-3 padded-content'>
+        <div class='col-12'>
+        <div class='table-responsive'>
+        <table class='table table-striped dataTable'>
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Partenaire 1</th>
+                    <th>Partenaire 2</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registration in board.registrations %}
+                <tr>
+                    <td>{{ registration.no }}</td>
+                    <td>{{ registration.leftPartner }}</td>
+                    <td>{{ registration.rightPartner }}</td>
+                    <td>
+                        {% if registration.rightPartner is empty %}
+                            {{ registration.comment}}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        </div>
+
+        <div class='col-12'>
+            <p>Si vous souhaitez vous désinscrire, merci de contacter
+                <a href='mailto:François Stoekli <stoecklifrancois@yahoo.com>'>François Stoekli</a>.
+            </p>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    <h2>S'inscrire</h2>
+
+    {% set showComplete = completeForm.idx.vars.choices | length > 0 %}
+
+    <div class='row gy-3 padded-content'>
+
+        <div class='col-12'>
+            <div class='form-group'>
+                <label class='form-label' for="registration_choice">Mode d'inscription</label>
+                <select id="registration_choice" class='form-control'>
+                    <option value="full">Je m'inscris moi et mon/ma partenaire</option>
+                    <option value="half">Je cherche un(e) partenaire</option>
+                    {% if showComplete %}
+                    <option value="complete">Je complète l'inscription de mon/ma partenaire</option>
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+
+        <div class='col-12'>
+            {{ form_start(fullForm, {'attr': {'class': 'card p-3 bg-light'}}) }}
+            <div class='row'>
+                <div class='col-12 col-sm-6'>
+                    {{ form_row(fullForm.leftPartner) }}
+                </div>
+                <div class='col-12 col-sm-6'>
+                    {{ form_row(fullForm.rightPartner) }}
+                </div>
+                <div class='col-12'>
+                    {{ form_widget(fullForm.send, {'attr': {'class': 'btn-primary'}}) }}
+                </div>
+            </div>
+            {{ form_end(fullForm) }}
+
+            {{ form_start(halfForm, {'attr': {'class': 'card p-3 bg-light'}}) }}
+            <div class='row'>
+                <div class='col-12 col-sm-6'>
+                    {{ form_row(halfForm.leftPartner) }}
+                </div>
+                <div class='col-12 col-sm-6'>
+                    {{ form_row(halfForm.comment) }}
+                </div>
+                <div class='col-12'>
+                    {{ form_widget(halfForm.send, {'attr': {'class': 'btn-primary'}}) }}
+                </div>
+            </div>
+            {{ form_end(halfForm) }}
+
+            {% if showComplete %}
+            {{ form_start(completeForm, {'attr': {'class': 'card p-3 bg-light'}}) }}
+            <div class='row'>
+                <div class='col-12 col-sm-6'>
+                    {{ form_row(completeForm.rightPartner) }}
+                </div>
+                <div class='col-12 col-sm-6'>
+                    {{ form_row(completeForm.idx) }}
+                </div>
+                <div class='col-12'>
+                    {{ form_widget(completeForm.send, {'attr': {'class': 'btn-primary'}}) }}
+                </div>
+            </div>
+            {{ form_end(completeForm) }}
+            {% endif %}
+        </div>
+    </div>
+
+    <h2>Apporter un goûter</h2>
+
+    <div class='padded-content'>
+        {% if board.peopleWhoBringSnack is not empty %}
+            {% if board.peopleWhoBringSnack | length == 1 %}
+                <p>{{ board.peopleWhoBringSnack[0] }} apporte le goûter, merci !</p>
+            {% else %}
+                <p>{{ board.peopleWhoBringSnack | slice(0, -1) | join(', ') }} et {{ board.peopleWhoBringSnack | last }} apportent le goûter, merci !</p>
+            {% endif %}
+        {% else %}
+                <p>Personne n'a proposé de goûter pour l'instant.</p>
+        {% endif %}
+    </div>
+
+    <div class='row gy-3 padded-content'>
+        <div class='col-12 col-sm-8 col-md-6'>
+            {{ form_start(snackForm, {'attr': {'class': 'card p-3 bg-light'}}) }}
+            <div class='row'>
+                <div class='col-12'>
+                    {{ form_row(snackForm.name) }}
+                </div>
+                <div class='col-12'>
+                    {{ form_widget(snackForm.send, {'attr': {'class': 'btn-primary'}}) }}
+                </div>
+            </div>
+            {{ form_end(snackForm) }}
+        </div>
+    </div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{{ form_start(form, {'attr': {'class': 'card p-3 bg-light'}}) }}
+<div class='row'>
+    <div class='col-12 col-sm-6'>
+        {{ form_row(form.date) }}
+    </div>
+    <div class='col-12 col-sm-6'>
+        {{ form_row(form.time) }}
+    </div>
+    <div class='col-12 col-sm-6'>
+        {{ form_row(form.searchOnly) }}
+    </div>
+    {% if form.repeat is defined %}
+        <div class='col-12 col-sm-6'>
+            {{ form_row(form.repeat) }}
+        </div>
+    {% endif %}
+    <div class='col-12'>
+        {{ form_widget(form.send) }}
+    </div>
+</div>
+{{ form_end(form) }}

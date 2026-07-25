@@ -1,0 +1,106 @@
+#footer
+{
+	background-color: $green;
+	color: $white;
+
+	.col-left, .col-right, .col-center
+	{
+		margin: $fix-lg 0 0 0;
+			
+        @include media-breakpoint-down(md)
+		{
+			text-align: center;
+			margin-bottom: 0;
+		}
+
+		h1
+		{
+			font-size: $fix-lg;
+		}
+
+		h2
+		{
+			font-size: $fix-md;
+		}
+		
+		h3
+		{
+			font-size: $fix-md * 0.8;
+		}
+
+		h1, h2, h3
+		{
+			color: $white;
+
+            @include media-breakpoint-down(sm)
+			{
+				text-align: center;
+			}
+		}
+
+		a 
+		{
+			color: $white;
+			padding: calc($fix-xs / 2);
+			border-radius: calc($fix-xs / 2);
+
+			&:hover
+			{
+				background-color: $white;
+				color: $primary;
+			}
+		}
+	}
+
+	.col-left
+	{
+		text-align: right;
+
+	        @include media-breakpoint-down(md)
+		{
+			text-align: center;
+		}
+	}
+	
+	.col-right
+	{
+		p
+		{
+			text-align: justify;
+		}
+	}
+
+	.col-center
+	{
+			text-align: center;
+			margin: $fix-lg 0;
+				
+			h1
+			{
+				margin: 0;
+			}
+
+			.comity-icon
+			{
+				background-color: $white;
+				max-width: $fix-lg * 6;
+
+				padding: $fix-md;
+				margin: $fix-lg auto 0 auto;
+
+				border-radius: calc($fix-xs / 2);
+				
+				h2
+				{
+					color: $red;
+					margin: 0 0 $fix-md 0;
+				}	
+
+				h3
+				{
+					color: $green;
+					margin: 0;
+				}	
+			}
+	}
+}

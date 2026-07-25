@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Gestion des inscriptions du
+    {{ board.date | frenchDate('full') }}
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ block('title') }}</h1>
+
+<h2>Modifier l'heure</h2>
+
+<div class='padded-content'>
+
+    {% include 'admin/registrations.form.html.twig' with {'form': form} %}
+
+    {% if board.registrations | length > 0 %}
+        <h2>Supprimer un inscription</h2>
+
+        <div class='table-responsive'>
+        <table class='table table-striped'>
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Partenaire 1</th>
+                    <th>Partenaire 2</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registration in board.registrations %}
+                <tr>
+                    <td>{{ registration.no }}</td>
+                    <td>{{ registration.leftPartner }}</td>
+                    <td>{{ registration.rightPartner }}</td>
+                    <td>
+                        <form method='POST' action='{{
+                            path('admin_registrations_registration_delete', {
+                                'id': board.id,
+                                'idx': registration.idx
+                            })
+                        }}'>
+                            <input class='btn btn-secondary' type='submit' value='X'>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+
+    {% if board.peopleWhoBringSnack | length > 0 %}
+        <h2>Supprimer une proposition de goûter</h2>
+
+        <div class='table-responsive'>
+        <table class='table table-striped'>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for name in board.peopleWhoBringSnack %}
+                <tr>
+                    <td>{{ name }}</td>
+                    <td>
+                        <form method='POST' action='{{
+                            path('admin_registrations_snack_delete', {
+                                'id': board.id,
+                                'name': name
+                            })
+                        }}'>
+                            <input class='btn btn-secondary' type='submit' value='X'>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+    
+</div>
+
+{% endblock %}
+
+

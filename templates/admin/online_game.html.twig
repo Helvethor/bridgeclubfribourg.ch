@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Gestion des parties en ligne
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ block('title') }}</h1>
+
+
+<h2>Ajouter une partie</h2>
+
+<div class='padded-content'>
+	{{ form_start(form, {'attr': {'class': 'card p-3 bg-light'}}) }}
+	<div class='row'>
+		<div class='col-12 col-sm-6'>
+			{{ form_row(form.name) }}
+		</div>
+		<div class='col-12 col-sm-6'>
+			{{ form_row(form.link) }}
+		</div>
+		<div class='col-12 col-sm-6'>
+			{{ form_row(form.date) }}
+			</div>
+		<div class='col-12 col-sm-6'>
+			{{ form_row(form.time) }}
+		</div>
+		<div class='col-12'>
+			{{ form_widget(form.send, {'attr': {'class': 'btn-primary'}}) }}
+		</div>
+	</div>
+	{{ form_end( form ) }}
+</div>
+
+
+
+{% if onlineGames is not empty %}
+
+<h2>Liste des parties en ligne</h2>
+
+<div class='table-responsive padded-content'>
+<table class='table table-striped dataTable'>
+
+	<thead>
+		<tr>
+			<th>Id</th><th>Nom</th><th>Date</th><th>Heure</th><th>Url</th><th>Supprimer</th>
+		</tr>
+	</thead>
+
+	<tbody>
+	{% for onlineGame in onlineGames %}
+		<tr>
+			<td>{{ onlineGame.id }}</td>
+			<td>{{ onlineGame.name }}</td>
+			<td>{{ onlineGame.dateAndTime | date('d/m/Y') }}</td>
+			<td>{{ onlineGame.dateAndTime | date('H:i') }}</td>
+			<td>
+				<a href='{{ onlineGame.link }}' target='_blank' rel='noopener noreferrer'>lien externe</a>
+			</td>
+			<td>
+				<form method='POST' action="{{ url('admin_online_game_delete', { id: onlineGame.id }) }}">
+					<input class='btn btn-danger' type='submit' value='X'>
+				</form>
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+
+</table>
+</div>
+
+{% endif %}
+
+{% endblock %}

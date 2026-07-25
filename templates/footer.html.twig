@@ -1,0 +1,142 @@
+<div id='footer' class='row'>
+	<div class='d-none d-lg-block col-lg-3 col-xl-2 offset-xl-1 white-band' style=''>
+		&nbsp
+	</div>
+
+	<div class='d-none d-lg-block col-lg-3 col-xl-2 offset-xl-1 sidebar' style=''>
+		&nbsp;
+	</div>
+
+	<div class='col-13 col-lg-9 col-xl-8 content'>
+		<div class='row'>
+
+			<div class='col-12 col-md-4 col-left'>
+				
+				<h1>	
+					Le Club
+				</h1>
+
+				<h2>
+					Adresse
+				</h2>
+
+				<p>
+					Route de Beaumont 20<br>
+					1700 Fribourg
+				</p>
+
+				<h2>
+					Téléphone
+				</h2>
+
+				<p>
+					026 424 46 63
+				</p>
+	
+				<h2>
+					E-Mail
+				</h2>
+
+				<p>
+					<a href='mailto:info@bridgeclubfribourg.ch'>
+						info@bridgeclubfribourg.ch
+					</a>
+				</p>
+
+			</div>
+
+			<div class='col-12 col-md-8 col-right'>
+
+				<h1>
+					Présentation
+				</h1>
+
+				<p>
+					Fondé en 1953, le club de bridge 
+					des Quatres Trèfles de Fribourg 
+					propose à tous ceux qui le désirent
+					de découvrir ce jeu passionnant!
+				</p>
+
+				<p>
+					A travers des cours, des compétitions nationales lors 
+					desquelles s'illustrent régulièrement les membres du 
+					club (plusieurs titres de champions suisses 
+					ont ainsi été remportés ces dernières 
+					années), des parties libres ou encore 
+					des tournois internes qui ont lieu 
+					le mardi à 13h30 et le 
+					jeudi à 19h30. N'hésitez pas à 
+					nous contacter ou à passer lors d'un tournoi! 
+				</p>
+
+			</div>
+
+			{% set comity = {
+				0: {
+					'title': 'Président', 
+					'firstName': 'François', 
+					'lastName': 'Stoeckli'
+				},
+				1: {
+					'title': 'Caissier', 
+					'firstName': 'Jean-Jacques', 
+					'lastName': 'Dousse'
+				},
+				2: {
+					'title': 'Membre', 
+					'firstName': 'Fabienne', 
+					'lastName': 'Pasquier'
+				},
+				3: {
+					'title': 'Membre', 
+					'firstName': 'Jean-Marc', 
+					'lastName': 'Métrailler'
+				},
+				4: {
+					'title': 'Membre', 
+					'firstName': 'Yvonne', 
+					'lastName': 'Papaux Karrer'
+				}
+			} %}
+			
+			<div class='col-12 col-center'>
+				
+				<h1>
+					Membres du Comité
+				</h1>
+				
+				<div class='row'>
+
+					{% for member in comity %}
+
+						<div class='col-6 col-md-4'>	
+							
+							<div class='comity-icon'>
+
+								<h2>
+									{{ member.title }}
+								</h2>
+								<h3>
+									{{ member.firstName }}<br>{{ member.lastName }}
+								</h3>
+
+							</div>
+
+						</div>
+	
+					{% endfor %}
+				
+				</div>
+
+			</div>
+
+			<div class='col-12 col-center margin-top-zero'>
+				<h1>
+					Site réalisé par <a href='mailto:vincentpasquier@posteo.net'>Vincent&nbsp;Pasquier</a>
+				</h1>
+			</div>
+
+		</div>
+	</div>
+</div>

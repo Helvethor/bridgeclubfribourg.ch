@@ -1,0 +1,35 @@
+/*form[name=registration_boards] {
+
+    legend, div[id$=_date] {
+        display: none;
+    }
+
+    input[type=text] {
+        width: 2rem;
+        padding: 0;
+        text-align: center;
+    }
+
+    fieldset {
+        margin: 0;
+    }
+
+    .day {
+        text-align: right;
+        font-size: $fix-xs;
+    }
+
+    .board-control {
+        fieldset, input {
+            vertical-align: middle;
+        }
+
+        input {
+            display: inline;
+        }
+
+        fieldset {
+            display: inline;
+        }
+    }
+}*/

@@ -1,0 +1,114 @@
+	#menu
+	{
+
+		span
+		{
+			font-size: $fix-md;
+			font-variant: small-caps;
+			color: $gray;
+
+			display: block;
+			text-align: center;
+		}
+
+		ul
+		{
+			list-style: none;
+			display: table;
+
+			margin: $fix-lg auto;
+			padding: 0;
+
+			li 
+			{
+				margin-bottom: $fix-lg;
+
+				font-variant: small-caps;
+				font-size: $fix-md;
+
+				a 
+				{
+					color: $gray;
+
+					&:hover 
+					{
+						color: $red;
+					}
+				}
+
+				&:nth-child(4n + 1) a:before
+				{
+					content: "♠  ";
+					color: $black;
+				}
+				
+				&:nth-child(4n + 2) a:before
+				{
+					content: "♥  ";
+					color: $red;
+				}
+				
+				&:nth-child(4n + 3) a:before
+				{
+					content: "♣  ";
+					color: $black;
+				}
+				
+				&:nth-child(4n) a:before
+				{
+					content: "♦  ";
+					color: $red;
+				}
+			}
+		}
+	}
+
+/* Large devices and lower (<992px) */
+@include media-breakpoint-down(lg)
+{
+	#menu
+	{
+		background-color: $white;
+		padding: 0 !important;
+
+		span
+		{
+			float: left;
+			font-weight: bold;
+			/*margin: calc($fix-md / 2);*/
+		}
+
+		ul
+		{
+			margin: 0;
+			padding: 0 $fix-sm;
+			border-bottom: 1px solid $gray-lighter;
+			&:first-child {
+				border-top: 1px solid $gray-lighter;
+			}
+			width: inherit;
+
+			li 
+			{
+				margin: calc($fix-md / 2);
+				float: left;
+			}
+		}
+	}
+}
+/* Small devices and lower (<576px) */
+@include media-breakpoint-down(sm)
+{
+	#menu
+	{
+		padding: 0;
+
+		ul
+		{
+			li
+			{
+				margin: $fix-xs;
+			}
+		}
+	}
+}

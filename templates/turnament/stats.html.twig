@@ -1,0 +1,194 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Statistiques personnelles
+{% endblock %}
+
+
+{% block content %}
+
+<h1>Statistiques de {{ person.fullName }}</h1>
+<h2>Tournois du {{ dow | frenchDow }}, saison {{ fromYear }}&nbsp;-&nbsp{{ toYear }}</h2>
+
+<div class='print-hidden padded-content'>
+
+	<div class='palmaresNavigation'>
+    <div class='row gy-3 mb-4'>
+		<div class='col-12 col-md-8 form-group'>
+			<label for='personSelect' class='form-label'>Joueur</label>
+			<select id='personSelect' class='form-control select-redirect'>
+						
+				{% for selectPerson in persons %}
+					<option value='{{
+						path(
+							'turnament_stats',
+							{
+								'fromYear': fromYear,
+								'dow': dow,
+								'fsb': selectPerson.fsb
+							}
+						)
+					}}'
+					{% if person == selectPerson %}selected='selected'{% endif %}>
+						{{ selectPerson.fsb }} | {{ selectPerson.fullName }}
+					</option>
+				{% endfor %}
+
+			</select>
+		</div>
+	</div>
+
+	<div class='row gy-3 mb-4'>
+		<div class='col-12 col-sm-6 col-md-4 form-group'>
+			<label for='fromYearSelect' class='form-label'>Saison</label>
+			<select id='fromYearSelect' class='form-control select-redirect'>
+
+				{% for year in range( 2015, actualYear ) %}
+						<option value='{{
+							path(
+								'turnament_stats',
+								{
+									'fromYear': year,
+									'dow': dow,
+									'fsb': person.fsb
+								}
+							)
+						}}'
+						{% if year == fromYear %}selected='selected'{% endif %}>
+							Saison {{ year }} - {{ year + 1 }}
+						</option>
+				{% endfor %}
+
+			</select>
+		</div>
+
+		<div class='col-12 col-sm-6 col-md-4 form-group'>
+			<label for='dowSelect' class='form-label'>Jour de la semaine</label>
+			<select id='dowSelect' class='form-control select-redirect'>
+						
+				{% for selectDow in [ 
+					'monday',
+					'tuesday', 
+					'wednesday', 
+					'thursday', 
+					'friday', 
+					'saturday',
+					'sunday' ]
+				%}
+						<option value='{{
+							path(
+								'turnament_stats',
+								{
+									'fromYear': fromYear,
+									'dow': selectDow,
+									'fsb': person.fsb
+								}
+							)
+						}}'
+						{% if dow == selectDow %}selected='selected'{% endif %}>
+							Tournois du {{ selectDow | frenchDow }}
+						</option>
+				{% endfor %}
+
+			</select>
+		</div>
+		
+	</div>
+	</div>
+</div>
+
+
+{% if players is  empty %}
+
+	<div class='padded-content'>
+		<p>Aucun résultat n'est disponible sur cette page.</p>
+	</div>
+
+{% else %}
+
+	<div class='print-hidden padded-content'>
+		{% include 'turnament/files.html.twig' %}
+	</div>
+
+	<div class='table-responsive padded-content'>
+		<table class='table table-striped table-sortable'>
+
+			<thead>
+
+				<tr>
+					<th>Date</h>
+					<th>Partenaire</th>
+					<th>Rang</th>
+					<th>PV</th>
+					<th>Résultat</th>
+				</tr>
+
+			</thead>
+
+			<tbody>
+
+				{% for player in players %}
+				<tr>
+					{% if player.turnament.isIndividual %}
+						{% include 'misc/table-btn.html.twig' with {
+							'link': path('turnament_player', {
+								'day': player.turnament.date | date( 'd' ),
+								'month': player.turnament.date | date( 'm' ),
+								'year': player.turnament.date | date( 'Y' ),
+								'no': player.no
+							}),
+							'content': player.turnament.date | date( 'd/m/Y' )
+						} %}
+					{% else %}
+						{% include 'misc/table-btn.html.twig' with {
+							'link': path('turnament_pair', {
+								'day': player.turnament.date | date( 'd' ),
+								'month': player.turnament.date | date( 'm' ),
+								'year': player.turnament.date | date( 'Y' ),
+								'no': player.no
+							}),
+							'content': player.turnament.date | date( 'd/m/Y' )
+						} %}
+					{% endif %}
+
+					{% if player.turnament.isIndividual %}
+						<td>N/A</td>
+					{% else %}
+
+						{% set pair = player.pairs[0] %}
+						{% set partner =  pair.players[0] == player
+							? pair.players[1]
+							: pair.players[0]
+						%}
+						{% include 'misc/table-btn.html.twig' with {
+							'link': path('turnament_stats', {
+								'fromYear': fromYear,
+								'dow': dow,
+								'fsb': partner.person.fsb
+							}),
+							'content': partner.person.fullName
+						} %}
+					{% endif %}
+
+					<td>
+						{{ player.rank }}
+					</td>
+					<td>
+						{{ player.pv }}
+					</td>
+					<td>
+						{{ player.result }}
+					</td>
+
+				</tr>
+				{% endfor %}
+
+			</tbody>
+
+		</table>
+	</div>
+{% endif %}
+
+{% endblock %}
+	

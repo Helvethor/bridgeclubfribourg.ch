@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Calendrier
+{% endblock %}
+
+
+{% block content %}
+
+
+<h1>Calendrier des tournois</h1>
+<h2>{{ date | frenchMonth }} {{ date | date('Y') }}</h2>
+
+<div class='padded-content'>
+	{% set selectedYear = date | date('Y') %}
+	{% set selectedMonth = date | date('m') %}
+	{% set actualYear = 'now' | date('Y') %}
+
+	<div class='row gy-3 mb-4'>
+		<div class='col-12 col-sm-6 col-md-4 form-group'>
+			<label for='calendarYearSelect' class='form-label'>Année</label>
+			<select id='calendarYearSelect' class='form-control select-redirect'>
+				{% for year in range(2015, actualYear) %}
+					<option value='{{
+						path(
+							'turnament_calendar',
+							{
+								'year': year,
+								'month': selectedMonth
+							}
+						)
+					}}'
+					{% if year == selectedYear %}selected='selected'{% endif %}>
+						{{ year }}
+					</option>
+				{% endfor %}
+			</select>
+		</div>
+
+		<div class='col-12 col-sm-6 col-md-4 form-group'>
+			<label for='calendarMonthSelect' class='form-label'>Mois</label>
+			<select id='calendarMonthSelect' class='form-control select-redirect'>
+				{% for month in 1..12 %}
+					{% set monthDate = date(selectedYear ~ '-' ~ ('%02d' | format(month)) ~ '-01') %}
+					{% set monthValue = monthDate | date('m') %}
+					<option value='{{
+						path(
+							'turnament_calendar',
+							{
+								'year': selectedYear,
+								'month': monthValue
+							}
+						)
+					}}'
+					{% if monthValue == selectedMonth %}selected='selected'{% endif %}>
+						{{ monthDate | frenchMonth }}
+					</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+</div>
+
+<div class='table-responsive padded-content'>
+<table class="table table-striped dataTable">	
+
+	<thead>
+
+		<tr>
+			<th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th>
+		</tr>
+		
+	</thead>
+	<tbody>
+		
+		{% for week in calendar %}
+			<tr>
+				
+				{% for day in week %}
+						
+						{% if day.date is defined %}
+							
+							{% if day.turnament is defined %}
+                                {% if day.turnament.isExternal %}
+                                    {% include 'misc/table-btn.html.twig' with {
+                                        'link': day.turnament.externalLink,
+                                        'content': '<div class="day">' ~ day.date | date('d') ~ '</div>
+                                            <div class="event">Résultats</div>'
+                                    } %}
+                                {% else %}
+                                    {% include 'misc/table-btn.html.twig' with {
+                                        'link': path('turnament_result', {
+                                            'day': day.date | date('d'), 
+                                            'month': day.date | date('m'), 
+                                            'year': day.date | date('Y') 
+                                        }),
+                                        'content': '<div class="day">' ~ day.date | date('d') ~ '</div>
+                                            <div class="event">Résultats</div>'
+                                    } %}
+                                {% endif %}
+							{% elseif day.registrationBoard is defined %}
+                                {% if day.registrationBoard.searchOnly %}
+                                    {% set text = 'Partenaires' %}
+                                {% else %}
+                                    {% set text = 'Inscriptions' %}
+                                {% endif %}
+                                {% include 'misc/table-btn.html.twig' with {
+									'link': path('turnament_registrations', {
+                                        'day': day.date | date('d'), 
+                                        'month': day.date | date('m'), 
+                                        'year': day.date | date('Y') 
+									}),
+                                    'content': '<div class="day">' ~ day.date | date('d') ~ '</div>
+                                        <div class="event">' ~ text ~ '</div>'
+								} %}
+							{% else %}
+                                <td><div class='day'>{{ day.date | date('d') }}</div></td>
+							{% endif %}
+
+                        {% else %}
+                            <td></td>
+						{% endif %}
+
+				{% endfor %}
+
+			</tr>
+		{% endfor %}
+
+	</tbody>
+
+</table>
+</div>
+
+{% endblock %}

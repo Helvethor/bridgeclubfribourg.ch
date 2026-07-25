@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Donnes
+{% endblock %}
+
+
+{% block content %}
+
+{% if boards is  empty %}
+	<h1>Donnes</h1>
+	<div class='padded-content'>
+        <p>Aucun résultat n'est disponible sur cette page.</p>
+    </div>
+{% else %}
+
+{% set board = boards[0] %}
+{% set turnament = board.turnament %}
+
+<h1>Donne n°{{ board.no }}, {{ board.turnament.date | frenchDate('full') }}</h1>
+
+
+<div class='print-hidden padded-content'>
+	{% include 'turnament/navigation.html.twig' with { 'turnament': board.turnament } %}
+
+
+	<div class='row my-4'>
+	<div class='col-sm-4'>
+	<div class='form-group'>
+        <label for='boardSelect' class='form-label'>Sélectionner une donne</label>
+		<select id='boardSelect' class='form-control select-redirect'>
+					
+					{% for no in board.turnament.boardsIndexes %}
+						
+							<option value='{{
+								path(
+									'turnament_board',
+									{
+										'day': board.turnament.date | date ( 'd' ),
+										'month': board.turnament.date | date ( 'm' ),
+										'year': board.turnament.date | date ( 'Y' ),
+										'no': no
+									}
+								)
+							}}'
+							{% if board.no == no %}selected='selected'{% endif %}>
+								Donne n°{{ no }}
+							</option>
+
+					{% endfor %}
+
+		</select>
+	</div>
+	</div>
+	</div>
+
+    {% include 'turnament/files.html.twig' with { 'turnament': turnament } %}
+
+</div>
+
+<div class='table-responsive padded-content'>
+<table class='table table-striped table-sortable'>
+	
+	<thead>
+
+        <tr>
+            <th>NS</th>
+            <th>EO</th>
+            <th>Contrat</th>
+            <th>Par</th>
+            <th>Ent.</th>
+            <th>Rés.</th>
+            <th>Score NS</th>
+            <th>Score EO</th>
+            <th>NS %</th>
+            <th>EO %</th>
+        </tr>
+		
+	</thead>
+	<tbody>
+
+		{% for board in boards %}
+	
+			<tr>
+                {% if turnament.isIndividual %}
+                    <td>
+                        {{ board.pairNS.no }}
+                    </td>
+                    <td>
+                        {{ board.pairEO.no }}
+                    </td>
+                {% else %}
+                    {% include 'misc/table-btn.html.twig' with {
+                        'link': path('turnament_pair', {
+                            'day': board.turnament.date | date( 'd' ),
+                            'month': board.turnament.date | date( 'm' ),
+                            'year': board.turnament.date | date( 'Y' ),
+                            'no': board.pairNS.no,
+                        }),
+                        'content': board.pairNS.no
+                    } %}
+                    {% include 'misc/table-btn.html.twig' with {
+                        'link': path('turnament_pair', {
+                            'day': board.turnament.date | date( 'd' ),
+                            'month': board.turnament.date | date( 'm' ),
+                            'year': board.turnament.date | date( 'Y' ),
+                            'no': board.pairEO.no,
+                        }),
+                        'content': board.pairEO.no
+                    } %}
+                {% endif %}
+				<td class='suit-pretty'>
+					{{ board.contract }}
+				</td>
+				<td>
+					{{ board.leader }}
+				</td>
+				<td class='suit-pretty'>
+					{{ board.lead }}
+				</td>
+				<td>
+					{{ board.result }}
+				</td>
+                <td>
+                    {{ board.scoreNS }}
+                </td>
+                <td>
+                    {{ board.scoreEO }}
+                </td>
+                <td>
+                    {{ board.pointsNS | number_format(2) }}%
+                </td>
+                <td>
+                    {{ board.pointsEO | number_format(2) }}%
+                </td>
+			</tr>
+
+		{% endfor %}
+
+	</tbody>
+
+</table>
+</div>
+
+{% endif %}
+
+{% endblock %}

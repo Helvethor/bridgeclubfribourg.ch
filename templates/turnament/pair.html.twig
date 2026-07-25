@@ -1,0 +1,260 @@
+{% extends 'base.html.twig' %}
+
+{% set turnament = pair.turnament %}
+
+{% block title %}
+    {% if turnament.isIndividual %}
+        Joueurs
+    {% else %}
+        Paires
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+{% if pair is empty %}
+	<h1>Paires</h1>
+    <div class='padded-content'>
+	    <p>Aucun résultat n'est disponible sur cette page.</p>
+    </div>
+{% else %}
+
+<h1>Paire n°{{ pair.no }}, {{ turnament.date | frenchDate('full') }}</h1>
+
+<h2>
+	{{ pair.players[0].person.fullName }}, 
+    {% if not turnament.isIndividual %}
+        {{ pair.players[1].person.fullName }}
+    {% endif %}
+</h2>
+
+<div class='print-hidden padded-content'>
+
+	{% include 'turnament/navigation.html.twig' with { 'turnament': turnament } %}
+
+
+	<div class='row my-4'>
+        <div class='col-sm-5'>
+        <div class='form-group'>
+            <label for='pairSelect' class='form-label'>Sélectionner une paire</label>
+            <select id='pairSelect' class='form-control select-redirect'>
+                        
+                {% for selectPair in turnament.sortedPairs %}
+                    
+                        <option value='{{
+                            path(
+                                'turnament_pair',
+                                {
+                                    'day': selectPair.turnament.date | date ( 'd' ),
+                                    'month': selectPair.turnament.date | date ( 'm' ),
+                                    'year': selectPair.turnament.date | date ( 'Y' ),
+                                    'no': selectPair.no
+                                }
+                            )
+                        }}'
+                        {% if pair == selectPair %}selected='selected'{% endif %}>
+                            {{ selectPair.no }} | {{ selectPair.players[0].person.fullName }}
+                            {% if not pair.boards[0].turnament.isIndividual %}
+                                , {{ selectPair.players[1].person.fullName }}
+                            {% endif %}
+                        </option>
+
+                {% endfor %}
+
+            </select>
+        </div>
+        </div>
+    </div>
+
+    {% include 'turnament/files.html.twig' with { 'turnament': turnament } %}
+    
+</div>
+
+<div class='table-responsive padded-content'>
+<table class='table table-striped-alt dataTable'>
+
+	<thead>
+
+		<tr>
+            {% if turnament.isIndividual %}
+                <th class='vertical'Donne</th>
+                <th>N</th>
+                <th>S</th>
+                <th>E</th>
+                <th>O</th>
+                <th class='vertical'>Contrat</th>
+                <th class='vertical'>Par</th>
+                <th class='vertical'>Ent.</th>
+                <th class='vertical'>Res.</th>
+                <th class='vertical'>Score N</th>
+                <th class='vertical'>Score S</th>
+                <th class='vertical'>Score E</th>
+                <th class='vertical'>Score O</th>
+                <th class='vertical'>Paire {{ pair.no }} %</th>
+                <th class='vertical'>Moyenne %</th>
+            {% else %}
+                <th class='vertical'>Donne</th>
+                <th>NS</th>
+                <th>EO</th>
+                <th>Adversaires</th>
+                <th class='vertical'>Contrat</th>
+                <th class='vertical'>Par</th>
+                <th class='vertical'>Ent.</th>
+                <th class='vertical'>Res.</th>
+                <th class='vertical'>Score NS</th>
+                <th class='vertical'>Score EO</th>
+                <th class='vertical'>Paire {{ pair.no }} %</th>
+                <th class='vertical'>Moyenne %</th>
+            {% endif %}
+		</tr>
+		
+	</thead>
+	<tbody>
+
+		{% for confrontation in pair.confrontations %}
+
+			{% set group = cycle(['odd', 'even'], loop.index0) %}
+
+			{% for view in confrontation.views %}
+
+				{% set board = view.board %}
+				
+				{% if loop.index0 == 0 %}
+
+					<tr class='{{ group }}'>
+                        {% include 'misc/table-btn.html.twig' with {
+                            'link': path('turnament_board', {
+                                'day': turnament.date | date ( 'd' ),
+                                'month': turnament.date | date ( 'm' ),
+                                'year': turnament.date | date ( 'Y' ),
+                                'no': board.no
+                            }),
+                            'content': board.no
+                        } %}
+
+                        {% if board.turnament.isIndividual %}
+                            <td rowspan="{{ confrontation.continuity }}">
+                                {{ board.pairN.no }}
+                            </td>
+                            <td rowspan="{{ confrontation.continuity }}">
+                                {{ board.pairS.no }}
+                            </td>
+                            <td rowspan="{{ confrontation.continuity }}">
+                                {{ board.pairE.no }}
+                            </td>
+                            <td rowspan="{{ confrontation.continuity }}">
+                                {{ board.pairO.no }}
+                            </td>
+                        {% else %}
+                            <td rowspan="{{ confrontation.continuity }}">
+                                {{ board.pairNS.no }}
+                            </td>
+                            <td rowspan="{{ confrontation.continuity }}">
+                                {{ board.pairEO.no }}
+                            </td>
+
+                            {% include 'misc/table-btn.html.twig' with {
+                                'link': path('turnament_pair', {
+                                    'day': turnament.date | date ( 'd' ),
+                                    'month': turnament.date | date ( 'm' ),
+                                    'year': turnament.date | date ( 'Y' ),
+                                    'no': view.opponentPair.no
+                                }),
+                                'content': view.opponentPair.players[0].person.fullName
+                                    ~ '<br>'
+                                    ~ view.opponentPair.players[1].person.fullName,
+                                'attributes': 'rowspan=' ~ confrontation.continuity
+                            } %}
+                        {% endif %}
+
+						<td class='suit-pretty'>
+							{{ board.contract }}
+						</td>
+						<td>
+							{{ board.leader }}
+						</td>
+						<td class='suit-pretty'>
+							{{ board.lead }}
+						</td>
+						<td>
+							{{ board.result }}
+						</td>
+                        {% if turnament.isIndividual %}
+                            <td>
+                                {{ view.scoreN }}
+                            </td>
+                            <td>
+                                {{ view.scoreS }}
+                            </td>
+                            <td>
+                                {{ view.scoreE }}
+                            </td>
+                            <td>
+                                {{ view.scoreO }}
+                            </td>
+                        {% else %}
+                            <td>
+                                {{ view.scoreNS }}
+                            </td>
+                            <td>
+                                {{ view.scoreEO }}
+                            </td>
+                        {% endif %}
+						<td>
+							{{ view.pairPoints | number_format(2) }}%
+						</td>
+						<td rowspan="{{ confrontation.continuity }}">
+							{{ confrontation.average | number_format(2) }}%
+						</td>
+					</tr>
+
+				{% else %}
+
+					<tr class='{{ group }}'>
+                        {% include 'misc/table-btn.html.twig' with {
+                            'link': path('turnament_board', {
+                                'day': turnament.date | date ( 'd' ),
+                                'month': turnament.date | date ( 'm' ),
+                                'year': turnament.date | date ( 'Y' ),
+                                'no': board.no
+                            }),
+                            'content': board.no
+                        } %}
+						<td class='suit-pretty'>
+							{{ board.contract }}
+						</td>
+						<td>
+							{{ board.leader }}
+						</td>
+						<td class='suit-pretty'>
+							{{ board.lead }}
+						</td>
+						<td>
+							{{ board.result }}
+						</td>
+						<td>
+							{{ view.scoreNS }}
+						</td>
+						<td>
+							{{ view.scoreEO }}
+						</td>
+						<td>
+							{{ view.pairPoints | number_format(2) }}%
+						</td>
+					</tr>	
+
+				{% endif %}
+
+			{% endfor %}
+
+		{% endfor %}
+
+	</tbody>
+
+</table>
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Gestion des inscriptions
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ block('title') }}</h1>
+
+<h2>Ouvrir des inscriptions</h2>
+
+<div class='padded-content'>
+    {% include 'admin/registrations.form.html.twig' with {'form': boardForm} %}
+</div>
+
+{% if boards is defined and boards | length > 0 %}
+<h2>Modifier les inscriptions</h2>
+
+<div class='padded-content'>
+
+    <div class='table-responsive'>
+    <table class='table table-striped dataTable'>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Type</th>
+                <th>Modifier</th>
+                <th>Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for board in boards %}
+            <tr>
+                <td>{{ board.id }}</td>
+                <td><a href="{{ path('turnament_registrations', {
+                        'day': board.date | date( 'd' ),
+                        'month': board.date | date( 'm' ),
+                        'year': board.date | date( 'Y' ),
+                    }) }}">{{ board.date | date('Y/m/d') }}</a></td>
+                <td>{{ board.time | date('H:i') }}</td>
+                <td>
+                    {% if board.searchOnly %}
+                        Recherche de partenaires
+                    {% else %}
+                        Inscriptions ({{ board.registrations | length }})
+                    {% endif %}
+                </td>
+                <td>
+                    <form method='POST' action='{{ path('admin_registrations_modify', {
+                        'id': board.id
+                    }) }}'>
+                        <input class='btn btn-primary' type='submit' value='O'>
+                    </form>
+                </td>
+                <td>
+                    <form method='POST' action='{{ path('admin_registrations_delete', {
+                        'id': board.id
+                    }) }}'>
+                        <input class='btn btn-secondary' type='submit' value='X'>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

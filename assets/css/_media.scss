@@ -1,0 +1,21 @@
+/* Responsive base layer (Bootstrap 5 breakpoints) */
+
+html {
+	font-size: 16px;
+}
+
+/* Small screens and down (<768px, legacy xs behavior) */
+@include media-breakpoint-down(md)
+{
+	html {
+		font-size: 15px;
+	}
+}
+
+/* Medium screens and up (>=768px) */
+@include media-breakpoint-up(md)
+{
+	html {
+		font-size: 16px;
+	}
+}

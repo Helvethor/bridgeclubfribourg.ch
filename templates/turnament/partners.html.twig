@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Recherche de partenaires
+{% endblock %}
+
+
+{% block content %}
+
+<h1>
+    Recherche de partenaires, {{ date | frenchDate('full') }}
+    {% if board is not empty %}
+        à {{ board.time | date('H:i') }}
+    {% endif %}
+</h1>
+
+{% if board is empty %}
+    <div class='padded-content'>
+        <p>La recherche de partenaires n'est pas ouverte pour cette date.</p>
+    </div>
+{% else %}
+
+{% if board.registrations is not empty %}
+<h2>Personnes en recherche</h2>
+
+<div class='table-responsive padded-content'>
+<table class='table table-striped'>
+	<thead>
+        <tr>
+            <th>Nom</th>
+            <th>Message</th>
+        </tr>
+	</thead>
+	<tbody>
+        {% for registration in board.registrations %}
+        {% if registration.rightPartner is empty %}
+        <tr>
+            <td>{{ registration.leftPartner }}</td>
+            <td>{{ registration.comment }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+	</tbody>
+</table>
+</div>
+
+<div class='padded-content'>
+    <p>Si vous souhaitez vous désinscrire, merci de contacter
+        <a href='mailto:François Stoekli <stoecklifrancois@yahoo.com>'>François Stoekli</a>.
+    </p>
+</div>
+{% endif %}
+
+<h2>Chercher un partenaire</h2>
+
+<div class='padded-content'>
+    {{ form_start(halfForm) }}
+    <div class='row'>
+        <div class='col-12 col-sm-6'>
+            {{ form_row(halfForm.leftPartner) }}
+        </div>
+        <div class='col-12 col-sm-6'>
+            {{ form_row(halfForm.comment) }}
+        </div>
+    </div>
+    {{ form_row(halfForm.send, {'attr': {'class': 'btn-primary'}}) }}
+    {{ form_end(halfForm) }}
+</div>
+
+{% endif %}
+
+{% endblock %}

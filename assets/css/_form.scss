@@ -1,0 +1,39 @@
+/*.form
+{
+
+	form
+	{
+		margin-top: $fix-md;
+
+		input, button, select, .mce-tinymce
+		{
+			margin-bottom: $fix-md;
+			max-width: 280px;
+		}
+	}
+}*/
+
+/*
+div.form-group {
+	margin-bottom: $fix-md;
+
+	label {
+		margin-bottom: $fix-xs;
+	}
+}
+*/
+
+.form-control {
+	background-color: $white;
+	&:focus {
+		background-color: $white;
+	}
+}
+
+.form-label {
+	font-weight: bold;
+}
+
+select:hover {
+	cursor: pointer;
+}

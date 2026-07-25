@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Gestion des cours
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ block('title') }}</h1>
+
+<div class='padded-content'>
+
+	{{ form_start(form, {'attr': {'class': 'card p-3 bg-light'}}) }}
+	<div class='form'>
+
+		<div class='row gy-3'>
+			<div class='col-12'>
+				{{ form_widget( form.content, { 'attr': { 'class': 'tinymce' } } ) }}
+			</div>
+			<div class='col-12'>
+				{{ form_widget( form.send ) }}
+			</div>
+		</div>
+	</div>
+	{{ form_end( form ) }}
+	
+</div>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+.event-list
+{
+    position: relative;
+    
+    .event
+    {
+        background-color: $white;
+        border-bottom: 1px solid $gray-lighter;
+        padding: calc($grid-gutter-width / 2);
+
+        .date-icon
+        {
+            padding: 0;
+            
+            div
+            {
+                padding: $fix-xs;
+                background-color: $primary;
+                border-radius: calc($fix-xs / 2);
+
+                text-align: center;
+                color: $white;
+                font-variant: small-caps;
+                font-size: $fix-xs * 1.5;
+            }
+        }
+
+        &.filler {
+            height: 800px;
+            position: absolute;
+            z-index: -100;
+            width: 100%;
+        }
+    }
+}
+
+.event-section
+{
+    h3
+    {
+        margin: $fix-xs 0 $fix-xs $fix-xs;
+        text-align: right;
+    }
+}
+
+@include media-breakpoint-down(md)
+{
+    .event-list p, .event-section h3 {
+        text-align: left;
+        margin: $fix-xs;
+    }
+}

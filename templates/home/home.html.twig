@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+	Accueil
+{% endblock %}
+
+
+{% block type %}
+	home
+{% endblock %}
+
+
+{% block content %}
+
+<div class='row'>
+
+	{% if onlineGames is not empty %}
+        <div class='col-12 col-md-4 event-section'>
+			<h3>Tournois en ligne à venir</h3>
+        </div>
+        <div class='col-12 col-md-8 event-list'>
+		{% for onlineGame in onlineGames %}
+			<div class='row event'>
+
+				<div class='col-sm-2 col-lg-3 d-none d-sm-block date-icon'>
+					<div>
+					{{ onlineGame.dateAndTime
+						| frenchDate('long')
+						| replace( { ' ': '<br>' } )
+						| raw
+					}}	
+					</div>
+				</div>
+
+				<div class='col-12 col-sm-10 col-lg-9'>
+					<p><strong>{{ onlineGame.name }}</strong></p>
+					<p><a href='{{ onlineGame.link }}'>Cliquez ici</a> pour rejoindre notre tournoi en ligne!</p>
+					<p>Rendez-vous le {{ onlineGame.dateAndTime | frenchDate('full') }} à {{ onlineGame.dateAndTime | date('H:i') }}.</p>
+				</div>
+
+			</div>
+		{% endfor %}
+        </div>
+    {% endif %}
+
+	{% if turnaments %}
+		<div class='col-12 col-md-4 event-section'>
+			<h3>Derniers tournois</h3>
+		</div>
+
+		<div class='col-12 col-md-8 event-list'>
+		{% for turnament in turnaments %}
+
+			<div class='row event'>
+
+				<div class='col-sm-2 col-lg-3 d-none d-sm-block date-icon'>
+					<div>
+					{{ turnament.date
+						| frenchDate('long')
+						| replace( { ' ': '<br>' } )
+						| raw
+					}}	
+					</div>
+				</div>
+
+				<div class='col-12 col-sm-10 col-lg-9'>
+					<p>Le tournoi du {{ turnament.date | frenchDate('full') }} est en ligne!</p>
+					<p>
+						{% if turnament.isExternal %}
+							<a href='{{ turnament.externalLink }}'>
+						{% else %}
+							<a href='{{
+								path(
+									'turnament_result',
+									{
+										'day': turnament.date | date( 'd' ),
+										'month': turnament.date | date( 'm' ),
+										'year': turnament.date | date( 'Y' )
+									}
+								)
+							}}'>
+						{% endif %}
+								Consulter les résultats
+							</a>
+					</p>
+				</div>
+
+			</div>
+
+		{% endfor %}
+		</div>
+	{% endif %}
+
+	{% for news in newz %}
+
+		<div class='col-12 col-md-4 event-section'>
+			<h3>{{ news.title }}</h3>
+		</div>
+		
+		<div class='col-12 col-md-8 event-list'>
+			<div class='row event'>
+				<div class='col-sm-2 col-lg-3 d-none d-sm-block date-icon'>
+					<div>
+					{{ news.date
+						| frenchDate('long')
+						| replace( { ' ': '<br>' } )
+						| raw
+					}}	
+					</div>
+				</div>
+
+				<div class='col-12 col-sm-10 col-lg-9'>
+					<p>{{ news.content
+						| split('\n') | join('</p><p>')
+						| raw
+					}}</p>
+				</div>
+			</div>
+		</div>
+
+	{% endfor %}
+
+		<div class='col-12 col-md-4 event-section'>
+		</div>
+		
+		<div class='col-12 col-md-8 event-list'>
+			<div class='row event filler'>
+				<div class='col-12 d-none d-sm-block date-icon'>
+				</div>
+			</div>
+		</div>
+
+</div>
+
+{% endblock %}
