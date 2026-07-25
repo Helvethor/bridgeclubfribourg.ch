@@ -12,6 +12,8 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+/compose.local.yaml
+
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###

@@ -6,10 +6,17 @@ services:
     build:
       context: .
       target: frankenphp_prod
+    ports: !override
+      - "127.0.0.1:18080:80"
+    volumes:
+      - ./public/upload:/app/public/upload
     environment:
       APP_SECRET: ${APP_SECRET}
+      DEFAULT_URI: https://bridgeclubfribourg.ch
+      MERCURE_PUBLIC_URL: https://bridgeclubfribourg.ch/.well-known/mercure
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+      SERVER_NAME: ${SERVER_NAME}
   node:
     image: node:22-alpine
     working_dir: /app

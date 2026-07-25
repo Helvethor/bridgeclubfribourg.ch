@@ -113,7 +113,7 @@ RUN <<-'EOF'
 	BINARIES=(frankenphp php file node npm chromium)
 	for target in $(printf '%s\n' "${BINARIES[@]}" | xargs -I{} which {}) \
 		$(find "$(php -r 'echo ini_get("extension_dir");')" -maxdepth 2 -name "*.so"); do
-		libtree -pv "$target" 2>/dev/null | grep -oP '(?:── )\K/\S+(?= \[)' | while IFS= read -r lib; do
+		{ libtree -pv "$target" 2>/dev/null || true; } | { grep -oP '(?:── )\K/\S+(?= \[)' || true; } | while IFS= read -r lib; do
 			[ -f "$lib" ] && cp -n "$lib" /tmp/libs/
 		done
 	done
@@ -135,6 +135,7 @@ COPY --from=frankenphp_prod_builder /usr/bin/chromium /usr/bin/chromium
 COPY --from=frankenphp_prod_builder /usr/bin/node /usr/bin/node
 COPY --from=frankenphp_prod_builder /usr/bin/npm /usr/bin/npm
 COPY --from=frankenphp_prod_builder /usr/lib/chromium /usr/lib/chromium
+COPY --from=frankenphp_prod_builder /usr/share/nodejs /usr/share/nodejs
 COPY --from=frankenphp_prod_builder /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY --from=frankenphp_prod_builder /usr/local/lib/php/extensions /usr/local/lib/php/extensions
 COPY --from=frankenphp_prod_builder /tmp/libs /usr/lib
@@ -157,6 +158,10 @@ COPY --from=frankenphp_prod_builder /etc/fonts /etc/fonts
 ENV  OPENSSL_CONF=/etc/ssl/openssl.cnf XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 RUN <<-EOF
+	apt-get update
+	apt-get install -y --no-install-recommends chromium
+	rm -rf /var/lib/apt/lists/*
+
 	mkdir -p /data/caddy /config/caddy
 	chown -R www-data:www-data /data /config
 	# Remove setuid/setgid bits
