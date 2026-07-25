@@ -41,7 +41,14 @@ class PDFController extends AbstractController
                     ->setChromePath('/usr/lib/chromium/chromium')
                     ->disableJavascript()
                     ->setOption('emulateMedia', 'print')
-                    ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
+                    ->setOption('args', [
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox',
+                        '--disable-dev-shm-usage',
+                        '--disable-crash-reporter',
+                        '--disable-breakpad',
+                        '--no-crash-upload',
+                    ])
                     ->noSandbox();
 
                 if (str_starts_with($candidate, 'https://') && $this->kernel->getEnvironment() !== 'prod') {
