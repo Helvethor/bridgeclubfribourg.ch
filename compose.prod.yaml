@@ -7,20 +7,13 @@ services:
       context: .
       target: frankenphp_prod
     ports: !override
-      - "127.0.0.1:18080:80"
+      - "127.0.0.1:${HTTP_PORT:?No HTTP port provided}:80"
     volumes:
       - ./public/upload:/app/public/upload
     environment:
       APP_SECRET: ${APP_SECRET}
-      DEFAULT_URI: https://bridgeclubfribourg.ch
-      MERCURE_PUBLIC_URL: https://bridgeclubfribourg.ch/.well-known/mercure
+      DEFAULT_URI: ${DEFAULT_URI:?No default URI provided}
+      MERCURE_PUBLIC_URL: https://${SERVER_NAME:?No server name provided}:${HTTPS_PORT:-443}/.well-known/mercure
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       SERVER_NAME: ${SERVER_NAME}
-  node:
-    image: node:22-alpine
-    working_dir: /app
-    volumes:
-      - ./:/app
-      - node_modules:/app/node_modules
-    command: sh -c "npm install && npm run build"
