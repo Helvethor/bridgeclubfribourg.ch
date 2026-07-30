@@ -18,6 +18,7 @@ services:
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
       MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:?No server name provided}:${HTTPS_PORT:-443}/.well-known/mercure}
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:?No Mercure JWT secret provided}
+      CADDY_GLOBAL_OPTIONS: ${CADDY_GLOBAL_OPTIONS:-}
     volumes:
       - caddy_data:/data
       - caddy_config:/config
@@ -26,14 +27,7 @@ services:
         target: 80
         published: ${HTTP_PORT:-80}
         protocol: tcp
-      - name: https
-        target: 443
-        published: ${HTTPS_PORT:-443}
-        protocol: tcp
-      - name: http3
-        target: 443
-        published: ${HTTP3_PORT:-443}
-        protocol: udp
+
     #user: ${FIX_UID:-1000}:${FIX_GID:-1000}
     #cap_add:
     #  - NET_BIND_SERVICE

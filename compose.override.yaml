@@ -3,6 +3,15 @@
 services:
   php:
     image: ${IMAGES_PREFIX:-}app-php-dev
+    ports:
+      - name: https
+        target: 443
+        published: ${HTTPS_PORT:-443}
+        protocol: tcp
+      - name: http3
+        target: 443
+        published: ${HTTP3_PORT:-443}
+        protocol: udp
     build:
       context: .
       target: frankenphp_dev

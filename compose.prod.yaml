@@ -6,14 +6,13 @@ services:
     build:
       context: .
       target: frankenphp_prod
-    ports: !override
-      - "127.0.0.1:${HTTP_PORT:?No HTTP port provided}:80"
+      
     volumes:
       - ./public/upload:/app/public/upload
     environment:
       APP_SECRET: ${APP_SECRET}
       DEFAULT_URI: ${DEFAULT_URI:?No default URI provided}
-      MERCURE_PUBLIC_URL: https://${SERVER_NAME:?No server name provided}:${HTTPS_PORT:-443}/.well-known/mercure
+      MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:?No Mercure public URL provided}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       SERVER_NAME: ${SERVER_NAME}
