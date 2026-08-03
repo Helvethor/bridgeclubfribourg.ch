@@ -8,15 +8,15 @@ services:
         condition: service_healthy
     environment:
       SERVER_NAME: ${SERVER_NAME:?No server name provided}, php:80
-      DEFAULT_URI: ${DEFAULT_URI:?No default URI provided}
+      DEFAULT_URI: http://${SERVER_NAME:?No server name provided}:${HTTP_PORT:?No HTTP port provided}
       APP_SECRET: ${APP_SECRET:?No app secret provided}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:?No Mercure JWT secret provided}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:?No Mercure JWT secret provided}
       # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
-      DATABASE_URL: ${DATABASE_URL:?No database URL provided}
+      DATABASE_URL: postgresql://${POSTGRES_USER:?No database user provided}:${POSTGRES_PASSWORD:?No database password provided}@database:5432/${POSTGRES_DB:?No database name provided}?serverVersion=${POSTGRES_VERSION:-16}&charset=${POSTGRES_CHARSET:-utf8}
       # Run "composer require symfony/mercure-bundle" to install and configure the Mercure integration
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
-      MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:?No server name provided}:${HTTPS_PORT:-443}/.well-known/mercure}
+      MERCURE_PUBLIC_URL: https://${HOSTNAME:?No host name provided}/.well-known/mercure
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:?No Mercure JWT secret provided}
       CADDY_GLOBAL_OPTIONS: ${CADDY_GLOBAL_OPTIONS:-}
     volumes:

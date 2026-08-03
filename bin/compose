@@ -1,0 +1,85 @@
+#!/usr/bin/env sh
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PROJECT_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+
+cd "$PROJECT_ROOT"
+
+if [ "$#" -lt 1 ]; then
+  echo "Usage: $0 <dev|prod> [compose args...]" >&2
+  exit 1
+fi
+
+ENV_NAME=$1
+shift
+
+ENV_FILES="--env-file .env"
+COMPOSE_FILES="-f compose.yaml"
+
+append_env_file_if_present() {
+  file_path=$1
+  if [ -f "$file_path" ]; then
+    ENV_FILES="$ENV_FILES --env-file $file_path"
+  fi
+}
+
+read_compose_project_name_from_file() {
+  file_path=$1
+  if [ ! -f "$file_path" ]; then
+    return 0
+  fi
+
+  awk '
+    /^[[:space:]]*#/ { next }
+    /^[[:space:]]*COMPOSE_PROJECT_NAME[[:space:]]*=/ {
+      line = $0
+      sub(/^[[:space:]]*COMPOSE_PROJECT_NAME[[:space:]]*=[[:space:]]*/, "", line)
+      print line
+    }
+  ' "$file_path" | tail -n 1
+}
+
+append_env_file_if_present .env.local
+
+case "$ENV_NAME" in
+  dev)
+    append_env_file_if_present .env.dev
+    append_env_file_if_present .env.dev.local
+    COMPOSE_FILES="$COMPOSE_FILES -f compose.dev.yaml"
+    ;;
+  prod)
+    append_env_file_if_present .env.prod
+    append_env_file_if_present .env.prod.local
+    COMPOSE_FILES="$COMPOSE_FILES -f compose.prod.yaml"
+    ;;
+  *)
+    echo "Unknown environment '$ENV_NAME'. Expected 'dev' or 'prod'." >&2
+    exit 1
+    ;;
+esac
+
+if [ -n "${COMPOSE_PROJECT_NAME:-}" ]; then
+  PROJECT_NAME=$COMPOSE_PROJECT_NAME
+else
+  PROJECT_NAME=""
+  for file_path in .env .env.local ".env.$ENV_NAME" ".env.$ENV_NAME.local"; do
+    candidate=$(read_compose_project_name_from_file "$file_path")
+    if [ -n "$candidate" ]; then
+      PROJECT_NAME=$candidate
+    fi
+  done
+
+  if [ -z "$PROJECT_NAME" ]; then
+    PROJECT_NAME=$(basename "$PROJECT_ROOT")
+  fi
+fi
+
+echo "[compose wrapper] environment: $ENV_NAME" >&2
+echo "[compose wrapper] project root: $PROJECT_ROOT" >&2
+echo "[compose wrapper] compose project name: $PROJECT_NAME" >&2
+echo "[compose wrapper] env files: $ENV_FILES" >&2
+echo "[compose wrapper] compose files: $COMPOSE_FILES" >&2
+
+# shellcheck disable=SC2086
+exec docker compose -p "$PROJECT_NAME" $ENV_FILES $COMPOSE_FILES "$@"

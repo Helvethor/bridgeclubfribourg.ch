@@ -11,8 +11,6 @@ services:
       - ./public/upload:/app/public/upload
     environment:
       APP_SECRET: ${APP_SECRET}
-      DEFAULT_URI: ${DEFAULT_URI:?No default URI provided}
-      MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:?No Mercure public URL provided}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
-      SERVER_NAME: ${SERVER_NAME}
+      SERVER_NAME: ${SERVER_NAME}, php:80
