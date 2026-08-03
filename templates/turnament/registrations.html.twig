@@ -130,17 +130,25 @@
         </div>
     </div>
 
-    <h2>Apporter un goûter</h2>
+    <h2>Apporter une collation</h2>
 
     <div class='padded-content'>
         {% if board.peopleWhoBringSnack is not empty %}
             {% if board.peopleWhoBringSnack | length == 1 %}
-                <p>{{ board.peopleWhoBringSnack[0] }} apporte le goûter, merci !</p>
+                <p><strong>{{ board.peopleWhoBringSnack[0] }}</strong> apporte une collation, merci !</p>
             {% else %}
-                <p>{{ board.peopleWhoBringSnack | slice(0, -1) | join(', ') }} et {{ board.peopleWhoBringSnack | last }} apportent le goûter, merci !</p>
+                <p>
+                    {% for person in board.peopleWhoBringSnack %}
+                        {% if not loop.first %}
+                            {% if loop.last %} et {% else %}, {% endif %}
+                        {% endif %}
+                        <strong>{{ person }}</strong>
+                    {% endfor %}
+                    apportent une collation, merci !
+                </p>
             {% endif %}
         {% else %}
-                <p>Personne n'a proposé de goûter pour l'instant.</p>
+                <p>Personne n'a proposé de collation pour l'instant.</p>
         {% endif %}
     </div>
 

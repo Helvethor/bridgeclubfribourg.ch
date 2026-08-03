@@ -18,7 +18,7 @@ class SnackContributionType extends AbstractType
                 'label' => 'Nom',
             ])
             ->add('send', SubmitType::class, [
-                'label' => "J'apporte un goûter",
+                'label' => "J'apporte un collation",
             ]);
     }
 }
