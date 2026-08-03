@@ -7,8 +7,8 @@ security:
             memory:
                 users:
                     admin:
-                        # bcrypt hash of the admin password — regenerate with: bin/console security:hash-password
-                        password: '$2y$13$0Us1Lh54xa9TXeNmEtXbuOOZwsq1xz.ksd7kkjIl8kZLaPE6HuZ.W'
+                        # bcrypt hash of the admin password from env — regenerate with: bin/console security:hash-password
+                        password: '%env(string:ADMIN_PASSWORD_HASH)%'
                         roles: ['ROLE_ADMIN']
 
     firewalls:
