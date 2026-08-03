@@ -23,3 +23,5 @@ phpstan.neon
 npm-debug.log
 yarn-error.log
 ###< Node.js ###
+
+*.code-workspace
