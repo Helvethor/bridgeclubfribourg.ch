@@ -21,7 +21,7 @@ class AddCustomFileCommand extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly string $turnamentDir,
+        private readonly string $turnamentUploadDir,
     ) {
         parent::__construct();
     }
@@ -37,7 +37,7 @@ class AddCustomFileCommand extends Command
         /** @var string[] $files */
         $files = $input->getArgument('files');
 
-        $customDir = $this->turnamentDir . '/custom';
+        $customDir = $this->turnamentUploadDir . '/custom';
 
         $turnamentRepo = $this->em->getRepository(Turnament::class);
 

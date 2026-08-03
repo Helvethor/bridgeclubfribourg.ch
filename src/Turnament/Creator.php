@@ -15,7 +15,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Creator
 {
-    protected string $turnamentDir;
+    protected string $turnamentUploadDir;
+    protected string $turnamentCsvDir;
     protected string $xlsDir;
     protected string $csvPairDir;
     protected string $csvBoardDir;
@@ -27,12 +28,17 @@ class Creator
     /** @var array<mixed> */
     protected array $players = [];
 
-    public function __construct(string $turnamentDir, protected EntityManagerInterface $em)
+    public function __construct(
+        string $turnamentUploadDir,
+        string $turnamentCsvDir,
+        protected EntityManagerInterface $em
+    )
     {
-        $this->turnamentDir = realpath($turnamentDir) ?: $turnamentDir;
-        $this->xlsDir = $this->turnamentDir . '/xls';
-        $this->csvPairDir = $this->turnamentDir . '/csv/pair';
-        $this->csvBoardDir = $this->turnamentDir . '/csv/board';
+        $this->turnamentUploadDir = realpath($turnamentUploadDir) ?: $turnamentUploadDir;
+        $this->turnamentCsvDir = realpath($turnamentCsvDir) ?: $turnamentCsvDir;
+        $this->xlsDir = $this->turnamentUploadDir . '/xls';
+        $this->csvPairDir = $this->turnamentCsvDir . '/pair';
+        $this->csvBoardDir = $this->turnamentCsvDir . '/board';
     }
 
     public function createFromLink(string $externalLink, \DateTimeInterface $date): array
@@ -113,6 +119,7 @@ class Creator
                 throw new \RuntimeException('Impossible de récupérer le fichier.');
             }
 
+            $this->ensureDirectoryExists($this->xlsDir);
             copy($tempPath, $this->xlsDir . '/' . $dateId . '.xls');
             $files = $this->xls2csv($dateId);
         } catch (\Exception $e) {
@@ -225,6 +232,9 @@ class Creator
         $csvPairFile = $this->csvPairDir . '/' . $dateId . '.csv';
         $csvBoardFile = $this->csvBoardDir . '/' . $dateId . '.csv';
 
+        $this->ensureDirectoryExists($this->csvPairDir);
+        $this->ensureDirectoryExists($this->csvBoardDir);
+
         if (!class_exists(IOFactory::class) || !class_exists(CsvWriter::class)) {
             throw new \RuntimeException('La bibliothèque PhpSpreadsheet n\'est pas disponible. Installez phpoffice/phpspreadsheet pour importer des fichiers Excel.');
         }
@@ -292,6 +302,13 @@ class Creator
             'csvPairFile' => $csvPairFile,
             'csvBoardFile' => $csvBoardFile,
         ];
+    }
+
+    private function ensureDirectoryExists(string $directory): void
+    {
+        if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
+            throw new \RuntimeException(sprintf('Impossible de créer le dossier: %s', $directory));
+        }
     }
 
     private function persist(): void

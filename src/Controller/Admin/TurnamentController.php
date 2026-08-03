@@ -22,7 +22,7 @@ class TurnamentController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly string $turnamentDir
+        private readonly string $turnamentUploadDir
     ) {
     }
 
@@ -79,12 +79,17 @@ class TurnamentController extends AbstractController
         $turnament  = $form->get('turnament')->getData();
         $boardFile  = $form->get('turnamentBoardFile')->getData();
 
-        $uploadDir = $this->turnamentDir . '/custom/';
+        $customUploadDir = $this->turnamentUploadDir . '/custom/';
+        if (!is_dir($customUploadDir) && !mkdir($customUploadDir, 0775, true) && !is_dir($customUploadDir)) {
+            $this->addFlash('danger', 'Impossible de créer le dossier des fichiers personnalisés.');
+            return $this->redirectToRoute('admin_turnament');
+        }
+
         $fileBase      = $turnament->getDate()->format('d.m.Y');
         $fileExtension = preg_replace('/.*(\.\[a-zA-Z\]+)$/', '\1', (string) $boardFile->getClientOriginalName());
 
-        $boardFile->move($uploadDir, $fileBase . $fileExtension);
-        $turnament->addCustomFile($uploadDir . $fileBase . $fileExtension);
+        $boardFile->move($customUploadDir, $fileBase . $fileExtension);
+        $turnament->addCustomFile($customUploadDir . $fileBase . $fileExtension);
         $this->em->persist($turnament);
         $this->em->flush();
 
