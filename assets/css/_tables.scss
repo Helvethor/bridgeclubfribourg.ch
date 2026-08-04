@@ -1,0 +1,152 @@
+.dt-container .row {
+	&:not(.dt-layout-table) {
+		display: none;
+		height: 0;
+	}
+
+	&.mt-2 {
+		margin-top: 0 !important;
+	}
+
+	.col-md {
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+}
+
+table.table {
+	border-collapse: separate !important;
+	border-spacing: 0;
+	border: 1px solid $gray-300;
+	border-radius: $btn-border-radius;
+	overflow: hidden;
+	font-family: $font-family-sans-serif !important;
+
+	thead th,
+	tbody td {
+		border: 0;
+	}
+
+	thead th + th,
+	tbody td + td {
+		border-left: 1px solid $gray-300;
+	}
+
+	thead th {
+		border-bottom: 1px solid $gray-300;
+	}
+
+	tbody td {
+		border-top: 1px solid $gray-300;
+	}
+
+	&.table-striped-alt tr {
+		&.odd {
+			background-color: $table-accent-bg !important;
+		}
+
+		&.even {
+			background-color: $body-bg !important;
+		}
+
+		td,
+		th {
+			background-color: transparent !important;
+			box-shadow: none !important;
+		}
+	}
+
+	&.table-striped {
+		thead tr:first-child {
+			background-color: $body-bg !important;
+		}
+
+		tr {
+			&:nth-child(odd) {
+				background-color: $table-accent-bg !important;
+			}
+
+			&:nth-child(even) {
+				background-color: $body-bg !important;
+			}
+
+			td,
+			th {
+				background-color: transparent !important;
+				box-shadow: none !important;
+			}
+		}
+	}
+
+	tr {
+		td,
+		th {
+			text-align: center;
+			vertical-align: middle;
+        }
+
+        td {
+            padding: $pad-xs !important;
+		}
+        
+        th {
+            padding: $pad-sm !important;
+        }
+	}
+
+
+	&.table-hover > tbody > tr:hover {
+		background-color: $gray-100;
+	}
+
+	.btn-table {
+		@include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size, $btn-border-radius);
+	}
+
+	.table-btn-hover {
+		background-color: $secondary;
+	}
+
+	.table-btn {
+		color: $secondary;
+
+		&:hover {
+			cursor: pointer;
+
+			a {
+				color: $red;
+				background-color: $gray-300 !important;
+				padding: 6px;
+				border-radius: $btn-border-radius;
+			}
+		}
+	}
+
+	&.dataTable {
+		th.dt-type-numeric,
+		td.dt-type-numeric {
+			text-align: center;
+		}
+	}
+
+	&.calendar-table {
+		table-layout: fixed;
+		width: 100%;
+
+		thead th,
+		tbody td {
+			width: calc(100% / 7);
+		}
+
+		td,
+		th {
+			overflow-wrap: anywhere;
+			word-break: normal;
+		}
+
+		a.btn-table {
+			white-space: normal;
+			line-height: 1.25;
+		}
+	}
+}

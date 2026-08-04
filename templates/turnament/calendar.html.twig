@@ -64,7 +64,7 @@
 </div>
 
 <div class='table-responsive padded-content'>
-<table class="table table-striped dataTable">	
+<table class="table table-striped dataTable calendar-table">	
 
 	<thead>
 
@@ -86,8 +86,7 @@
                                 {% if day.turnament.isExternal %}
                                     {% include 'misc/table-btn.html.twig' with {
                                         'link': day.turnament.externalLink,
-                                        'content': '<div class="day">' ~ day.date | date('d') ~ '</div>
-                                            <div class="event">Résultats</div>'
+										'content': day.date | date('d') ~ '<br>Résultats'
                                     } %}
                                 {% else %}
                                     {% include 'misc/table-btn.html.twig' with {
@@ -96,8 +95,7 @@
                                             'month': day.date | date('m'), 
                                             'year': day.date | date('Y') 
                                         }),
-                                        'content': '<div class="day">' ~ day.date | date('d') ~ '</div>
-                                            <div class="event">Résultats</div>'
+										'content': day.date | date('d') ~ '<br>Résultats'
                                     } %}
                                 {% endif %}
 							{% elseif day.registrationBoard is defined %}
@@ -112,11 +110,10 @@
                                         'month': day.date | date('m'), 
                                         'year': day.date | date('Y') 
 									}),
-                                    'content': '<div class="day">' ~ day.date | date('d') ~ '</div>
-                                        <div class="event">' ~ text ~ '</div>'
+									'content': day.date | date('d') ~ '<br>' ~ text
 								} %}
 							{% else %}
-                                <td><div class='day'>{{ day.date | date('d') }}</div></td>
+								<td>{{ day.date | date('d') }}<br>&nbsp;</td>
 							{% endif %}
 
                         {% else %}

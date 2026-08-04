@@ -147,12 +147,26 @@
                                 {{ board.pairO.no }}
                             </td>
                         {% else %}
-                            <td rowspan="{{ confrontation.continuity }}">
-                                {{ board.pairNS.no }}
-                            </td>
-                            <td rowspan="{{ confrontation.continuity }}">
-                                {{ board.pairEO.no }}
-                            </td>
+                            {% include 'misc/table-btn.html.twig' with {
+                                'link': path('turnament_pair', {
+                                    'day': turnament.date | date ( 'd' ),
+                                    'month': turnament.date | date ( 'm' ),
+                                    'year': turnament.date | date ( 'Y' ),
+                                    'no': board.pairNS.no
+                                }),
+                                'content': board.pairNS.no,
+                                'attributes': 'rowspan=' ~ confrontation.continuity
+                            } %}
+                            {% include 'misc/table-btn.html.twig' with {
+                                'link': path('turnament_pair', {
+                                    'day': turnament.date | date ( 'd' ),
+                                    'month': turnament.date | date ( 'm' ),
+                                    'year': turnament.date | date ( 'Y' ),
+                                    'no': board.pairEO.no
+                                }),
+                                'content': board.pairEO.no,
+                                'attributes': 'rowspan=' ~ confrontation.continuity
+                            } %}
 
                             {% include 'misc/table-btn.html.twig' with {
                                 'link': path('turnament_pair', {
