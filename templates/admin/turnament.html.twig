@@ -26,7 +26,7 @@
         </div>
     <div class='row'>
         <div class='col-12 col-md-2'>
-            {{ form_widget(turnamentFileForm.submit, {'attr': {'class': 'btn btn-outline-black'}}) }}
+            {{ form_widget(turnamentFileForm.submit, {'attr': {'class': 'btn btn-outline-primary'}}) }}
         </div>
     </div>
     {{ form_end(turnamentFileForm) }}
@@ -52,7 +52,7 @@
         </div>
         <div class='col-12'>
             {{ form_widget(turnamentBoardFileForm.submit,
-                {'attr': {'class': 'btn btn-outline-black'}}) }}
+                {'attr': {'class': 'btn btn-outline-primary'}}) }}
         </div>
     </div>
     {{ form_end(turnamentBoardFileForm) }}
@@ -81,7 +81,7 @@
     <br>
     <div class='row'>
         <div class='col-12'>
-            {{ form_widget(externalLinkForm.submit, {'attr': {'class': 'btn btn-outline-black'}}) }}
+            {{ form_widget(externalLinkForm.submit, {'attr': {'class': 'btn btn-outline-primary'}}) }}
         </div>
     </div>
     {{ form_end(externalLinkForm) }}
@@ -123,11 +123,11 @@
                     </td>
                     <td>
                         <div class='d-flex flex-wrap gap-1 justify-content-center'>
-                            <a href='{{ turnament.getFilesUrl().xlsFile }}' class='btn-table'>full-xls</a>
-                            <a href='{{ turnament.getFilesUrl().csvPairFile }}' class='btn-table'>pair-csv</a>
-                            <a href='{{ turnament.getFilesUrl().csvBoardFile }}' class='btn-table'>board-csv</a>
+                            <a href='{{ turnament.getFilesUrl().xlsFile }}' class='btn-table btn-outline-black'>full-xls</a>
+                            <a href='{{ turnament.getFilesUrl().csvPairFile }}' class='btn-table btn-outline-black'>pair-csv</a>
+                            <a href='{{ turnament.getFilesUrl().csvBoardFile }}' class='btn-table btn-outline-black'>board-csv</a>
                             {% if turnament.getCustomFileUrl() %}
-                                <a href='{{ turnament.getCustomFileUrl() }}' class='btn-table'>donnes</a>
+                                <a href='{{ turnament.getCustomFileUrl() }}' class='btn-table btn-outline-black'>donnes</a>
                             {% endif %}
                         </div>
                     </td>
