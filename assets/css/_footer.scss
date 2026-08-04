@@ -31,6 +31,8 @@
 		h1, h2, h3
 		{
 			color: $white;
+			margin-top: 0;
+			margin-bottom: $fix-sm;
 
             @include media-breakpoint-down(sm)
 			{
@@ -55,6 +57,11 @@
 	.col-left
 	{
 		text-align: right;
+
+		p {
+			margin-top: $fix-xs;
+			margin-bottom: $fix-md;
+		}
 
 	        @include media-breakpoint-down(md)
 		{
