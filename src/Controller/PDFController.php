@@ -19,7 +19,15 @@ class PDFController extends AbstractController
     #[Route('/pdf/{url}', name: 'pdf', requirements: ['url' => '.+'])]
     public function pdf(string $url): BinaryFileResponse
     {
-        $result = $this->pdfGenerationService->generate(urldecode($url));
+        $decodedUrl = urldecode($url);
+        $pdfTargetUrl = $decodedUrl;
+        if (str_contains($pdfTargetUrl, '?')) {
+            $pdfTargetUrl .= '&pdf=1';
+        } else {
+            $pdfTargetUrl .= '?pdf=1';
+        }
+
+        $result = $this->pdfGenerationService->generate($pdfTargetUrl);
 
         $response = new BinaryFileResponse($result['file']);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $result['filename']);

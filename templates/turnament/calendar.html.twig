@@ -20,7 +20,7 @@
 	<div class='row gy-3 mb-4'>
 		<div class='col-12 col-sm-6 col-md-4 form-group'>
 			<label for='calendarYearSelect' class='form-label'>Année</label>
-			<select id='calendarYearSelect' class='form-control select-redirect'>
+			<select id='calendarYearSelect' class='form-control select-redirect btn-select'>
 				{% for year in range(2015, actualYear) %}
 					<option value='{{
 						path(
@@ -40,7 +40,7 @@
 
 		<div class='col-12 col-sm-6 col-md-4 form-group'>
 			<label for='calendarMonthSelect' class='form-label'>Mois</label>
-			<select id='calendarMonthSelect' class='form-control select-redirect'>
+			<select id='calendarMonthSelect' class='form-control select-redirect btn-select'>
 				{% for month in 1..12 %}
 					{% set monthDate = date(selectedYear ~ '-' ~ ('%02d' | format(month)) ~ '-01') %}
 					{% set monthValue = monthDate | date('m') %}

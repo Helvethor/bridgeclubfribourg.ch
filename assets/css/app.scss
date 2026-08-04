@@ -77,10 +77,10 @@ $table-accent-bg: $gray-lighter;
     }
 }
 
-@include btn-outline-suit-variant(black, $suit-black);
-@include btn-outline-suit-variant(red, $suit-red);
-@include btn-outline-suit-variant(green, $suit-green);
-@include btn-outline-suit-variant(yellow, $suit-yellow);
+@include btn-outline-suit-variant("black", $suit-black);
+@include btn-outline-suit-variant("red", $suit-red);
+@include btn-outline-suit-variant("green", $suit-green);
+@include btn-outline-suit-variant("yellow", $suit-yellow);
 
 /* TinyMCE 6 handles its own styling */
 /* @import "~tinymce/skins/lightgray/content.min.css"; */

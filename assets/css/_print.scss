@@ -3,7 +3,10 @@
 	@page
 	{
         size: A4 portrait; /* Forces A4 orientation */
-        margin: 0.8cm !important;         /* Removes default browser headers/footers */
+        margin-top: 0.8cm !important;
+        margin-right: 0.8cm !important;
+        margin-bottom: 0.8cm !important;
+        margin-left: 0.8cm !important;
     }
 
     *

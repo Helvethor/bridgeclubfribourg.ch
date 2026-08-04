@@ -12,14 +12,16 @@
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 		<link rel="manifest" href="/site.webmanifest">
 
+		<!--
 		<style>
 			html { visibility: hidden; }
 			html.ready { visibility: visible; }
 		</style>
+		-->
 
 		{% block css %}
             <link rel="preload" href="{{ asset('build/app.css') }}" as="style"/>
-            <link href="{{ asset('build/app.css') }}" rel='stylesheet'/>
+            <link href="{{ asset('build/app.css') }}" rel='stylesheet' data-retry-asset='css'/>
 		{% endblock %}
 
     </head>
@@ -45,14 +47,46 @@
 			{% endblock %}
 	
 	        {% block javascript %}
-                <script src="{{ asset('build/runtime.js') }}" type='text/javascript' defer></script>
-                <script src="{{ asset('build/app.js') }}" type='text/javascript' defer></script>
+                <script src="{{ asset('build/runtime.js') }}" type='text/javascript' defer data-retry-asset='js'></script>
+                <script src="{{ asset('build/app.js') }}" type='text/javascript' defer data-retry-asset='js'></script>
 			{% endblock %}
 
 			<script>
 				window.addEventListener('load', function () {
 					document.documentElement.classList.add('ready');
 				});
+
+				window.addEventListener('error', function (event) {
+					var target = event.target;
+					if (!target || !target.dataset || !target.dataset.retryAsset) {
+						return;
+					}
+
+					if (target.dataset.retryAttempt === '1') {
+						return;
+					}
+
+					target.dataset.retryAttempt = '1';
+					var url = new URL(target.getAttribute(target.tagName === 'LINK' ? 'href' : 'src'), window.location.href);
+					url.searchParams.set('_', Date.now());
+
+					if (target.tagName === 'LINK') {
+						var replacement = document.createElement('link');
+						replacement.rel = 'stylesheet';
+						replacement.href = url.toString();
+						replacement.dataset.retryAsset = 'css';
+						replacement.dataset.retryAttempt = '1';
+						document.head.appendChild(replacement);
+					} else {
+						var replacementScript = document.createElement('script');
+						replacementScript.src = url.toString();
+						replacementScript.type = 'text/javascript';
+						replacementScript.defer = true;
+						replacementScript.dataset.retryAsset = 'js';
+						replacementScript.dataset.retryAttempt = '1';
+						document.head.appendChild(replacementScript);
+					}
+				}, true);
 			</script>
 
 		</div>

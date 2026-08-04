@@ -17,7 +17,7 @@
     <div class='row gy-3 mb-4'>
 		<div class='col-12 col-md-8 form-group'>
 			<label for='personSelect' class='form-label'>Joueur</label>
-			<select id='personSelect' class='form-control select-redirect'>
+			<select id='personSelect' class='form-control select-redirect btn-select'>
 						
 				{% for selectPerson in persons %}
 					<option value='{{
@@ -42,7 +42,7 @@
 	<div class='row gy-3 mb-4'>
 		<div class='col-12 col-sm-6 col-md-4 form-group'>
 			<label for='fromYearSelect' class='form-label'>Saison</label>
-			<select id='fromYearSelect' class='form-control select-redirect'>
+			<select id='fromYearSelect' class='form-control select-redirect btn-select'>
 
 				{% for year in range( 2015, actualYear ) %}
 						<option value='{{
@@ -65,7 +65,7 @@
 
 		<div class='col-12 col-sm-6 col-md-4 form-group'>
 			<label for='dowSelect' class='form-label'>Jour de la semaine</label>
-			<select id='dowSelect' class='form-control select-redirect'>
+			<select id='dowSelect' class='form-control select-redirect btn-select'>
 						
 				{% for selectDow in [ 
 					'monday',

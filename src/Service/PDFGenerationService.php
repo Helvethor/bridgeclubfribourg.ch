@@ -343,6 +343,14 @@ class PDFGenerationService
             'landscape' => 'false',
             'printBackground' => 'true',
             'waitDelay' => '100ms',
+            'paperWidth' => '21cm',
+            'paperHeight' => '29.7cm',
+            'marginTop' => '0.8cm',
+            'marginRight' => '0.8cm',
+            'marginBottom' => '0.8cm',
+            'marginLeft' => '0.8cm',
+            'preferCssPageSize' => 'true',
+            'singlePage' => 'false',
         ];
 
         curl_setopt_array($ch, [

@@ -27,6 +27,15 @@
 	{
 		background-color: $white;
 
+		.menu-section-title {
+			margin: 1rem 0 0.35rem;
+			font-size: 0.85rem;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: $gray-600;
+		}
+
 		/*padding-bottom: 1000px;
 		margin-bottom: -1000px;*/
 	}

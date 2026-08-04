@@ -1,5 +1,15 @@
 const $ = require('jquery');
 
+function shouldApplySuitPretty()
+{
+	if (typeof window.matchMedia === 'function' && window.matchMedia('print').matches) {
+		return false;
+	}
+
+	const params = new URLSearchParams(window.location.search || '');
+	return params.get('pdf') !== '1' && params.get('pdf') !== 'true';
+}
+
 function suitPretty( objs )
 {
 	objs.each( function() {
@@ -15,6 +25,10 @@ function suitPretty( objs )
 }
 
 $(document).ready( function () {
+
+	if (!shouldApplySuitPretty()) {
+		return;
+	}
 
 	suitPretty( $('.suit-pretty') );
 
