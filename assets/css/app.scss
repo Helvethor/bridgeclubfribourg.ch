@@ -58,6 +58,30 @@ $table-accent-bg: $gray-lighter;
 
 @import "~bootstrap/scss/bootstrap";
 @import "~datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+
+@mixin btn-outline-suit-variant($class-name, $color) {
+    .btn-outline-#{$class-name} {
+        color: $color;
+        border-color: $color;
+        background-color: transparent;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active,
+        &:not(:disabled):not(.disabled):active {
+            color: $white;
+            background-color: $color;
+            border-color: $color;
+        }
+    }
+}
+
+@include btn-outline-suit-variant(black, $suit-black);
+@include btn-outline-suit-variant(red, $suit-red);
+@include btn-outline-suit-variant(green, $suit-green);
+@include btn-outline-suit-variant(yellow, $suit-yellow);
+
 /* TinyMCE 6 handles its own styling */
 /* @import "~tinymce/skins/lightgray/content.min.css"; */
 /* @import "~tinymce/skins/lightgray/skin.min.css"; */
