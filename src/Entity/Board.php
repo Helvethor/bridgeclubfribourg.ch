@@ -242,9 +242,9 @@ class Board
 			];
 		}
 
-		// If score is a numeric integer
+		// If score is a numeric
 		if (is_numeric($score)) {
-			$scoreInt = (int) $score;
+			$scoreInt = (float) $score;
 			if ($scoreInt >= 0) {
 				return ['NS' => (string) $scoreInt, 'EO' => ''];
 			} else {
@@ -293,7 +293,15 @@ class Board
      */
     public function getPointsNS(): float|int
     {
-        return $this->pointsNS / ($this->pointsNS + $this->pointsEO) * 100;
+        if ($this->getHasBeenCorrected()) {
+            if (trim($this->scoreNS ?? '') === '---' && trim($this->scoreEO ?? '') === '---') {
+                return $this->parseNumericValue($this->pairNS?->getResult() ?? '0');
+            }
+
+            return $this->resolveCorrectedPoints($this->scoreNS, $this->pairEO, $this->pointsNS, $this->pointsEO);
+        }
+
+        return $this->getRawPointsPercent($this->pointsNS, $this->pointsEO);
     }
 
     /**
@@ -317,7 +325,55 @@ class Board
      */
     public function getPointsEO(): float|int
     {
-        return $this->pointsEO / ($this->pointsNS + $this->pointsEO) * 100;
+        if ($this->getHasBeenCorrected()) {
+            if (trim($this->scoreNS ?? '') === '---' && trim($this->scoreEO ?? '') === '---') {
+                return $this->parseNumericValue($this->pairEO?->getResult() ?? '0');
+            }
+
+            return $this->resolveCorrectedPoints($this->scoreEO, $this->pairNS, $this->pointsEO, $this->pointsNS);
+        }
+
+        return $this->getRawPointsPercent($this->pointsEO, $this->pointsNS);
+    }
+
+    private function resolveCorrectedPoints(?string $score, ?Pair $pair, mixed $sidePoints, mixed $otherSidePoints): float
+    {
+        $rawScore = trim((string) $score);
+        $pairResult = $this->parseNumericValue($pair?->getResult() ?? '0');
+
+        if (preg_match('/^([+-]?\d+(?:[.,]\d+)?)\s*([+-])\s*%$/', $rawScore, $matches) === 1) {
+            $value = $this->parseNumericValue($matches[1]);
+
+            return $matches[2] === '+'
+                ? max($value, $pairResult)
+                : min($value, $pairResult);
+        }
+
+        if (preg_match('/^([+-]?\d+(?:[.,]\d+)?)\s*%$/', $rawScore, $matches) === 1) {
+            return $this->parseNumericValue($matches[1]);
+        }
+
+        return $this->getRawPointsPercent($sidePoints, $otherSidePoints);
+    }
+
+    private function getRawPointsPercent(mixed $sidePoints, mixed $otherSidePoints): float
+    {
+        $side = (float) $sidePoints;
+        $other = (float) $otherSidePoints;
+        $total = $side + $other;
+
+        if ($total === 0.0) {
+            return 0.0;
+        }
+
+        return $side / $total * 100;
+    }
+
+    private function parseNumericValue(string $raw): float
+    {
+        $normalized = str_replace(',', '.', trim($raw));
+
+        return (float) preg_replace('/[^0-9+\-.]/', '', $normalized);
     }
 
     /**
