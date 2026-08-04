@@ -69,15 +69,14 @@
                 <tr>
             
                     <td>{{ player.rank }}</td>
-                    {% include 'misc/table-btn.html.twig' with {
-                        'link': path('turnament_player', {
+                    <td>
+                        <a href='{{ path('turnament_player', {
                             'day': player.turnament.date | date( 'd' ),
                             'month': player.turnament.date | date( 'm' ),
                             'year': player.turnament.date | date( 'Y' ),
                             'no': player.no
-                        }),
-                        'content': player.no
-                    } %}
+                        }) }}' class='btn-table'>{{ player.no }}</a>
+                    </td>
                     <td>{{ player.person.fullName }}</td>
                     <td>{{ player.mp }}</td>
                     <td>{{ player.result }}</td>
@@ -92,15 +91,14 @@
                 <tr>
             
                     <td>{{ pair.rank }}</td>
-                    {% include 'misc/table-btn.html.twig' with {
-                        'link': path('turnament_pair', {
+                    <td>
+                        <a href='{{ path('turnament_pair', {
                             'day': pair.turnament.date | date( 'd' ),
                             'month': pair.turnament.date | date( 'm' ),
                             'year': pair.turnament.date | date( 'Y' ),
                             'no': pair.no
-                        }),
-                        'content': pair.no 
-                    } %}
+                        }) }}' class='btn-table'>{{ pair.no }}</a>
+                    </td>
                     <td>{{ pair.players[0].person.fullName }}</td>
                     {% if not turnament.isIndividual %}
                         <td>{{ pair.players[1].person.fullName() }}</td>

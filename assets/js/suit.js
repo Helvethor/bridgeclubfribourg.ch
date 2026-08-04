@@ -7,10 +7,10 @@ function suitPretty( objs )
 		if (this.innerHTML.indexOf('Pass') >= 0)
 			return;
 
-		this.innerHTML = this.innerHTML.replace( 'P', '♠' );
-		this.innerHTML = this.innerHTML.replace( 'C', "<span style='color:#B40000'>♥</span>" );
-		this.innerHTML = this.innerHTML.replace( 'T', '♣' );
-		this.innerHTML = this.innerHTML.replace( 'K', "<span style='color:#B40000'>♦</span>" );
+		this.innerHTML = this.innerHTML.replace( 'P', "<span class='black'>♠</span>" );
+		this.innerHTML = this.innerHTML.replace( 'C', "<span class='red'>♥</span>" );
+		this.innerHTML = this.innerHTML.replace( 'T', "<span class='green'>♣</span>" );
+		this.innerHTML = this.innerHTML.replace( 'K', "<span class='yellow'>♦</span>" );
 	});
 }
 

@@ -131,25 +131,23 @@
 				{% for player in players %}
 				<tr>
 					{% if player.turnament.isIndividual %}
-						{% include 'misc/table-btn.html.twig' with {
-							'link': path('turnament_player', {
+						<td>
+							<a href='{{ path('turnament_player', {
 								'day': player.turnament.date | date( 'd' ),
 								'month': player.turnament.date | date( 'm' ),
 								'year': player.turnament.date | date( 'Y' ),
 								'no': player.no
-							}),
-							'content': player.turnament.date | date( 'd/m/Y' )
-						} %}
+							}) }}' class='btn-table'>{{ player.turnament.date | date( 'd/m/Y' ) }}</a>
+						</td>
 					{% else %}
-						{% include 'misc/table-btn.html.twig' with {
-							'link': path('turnament_pair', {
+						<td>
+							<a href='{{ path('turnament_pair', {
 								'day': player.turnament.date | date( 'd' ),
 								'month': player.turnament.date | date( 'm' ),
 								'year': player.turnament.date | date( 'Y' ),
 								'no': player.no
-							}),
-							'content': player.turnament.date | date( 'd/m/Y' )
-						} %}
+							}) }}' class='btn-table'>{{ player.turnament.date | date( 'd/m/Y' ) }}</a>
+						</td>
 					{% endif %}
 
 					{% if player.turnament.isIndividual %}
@@ -161,14 +159,13 @@
 							? pair.players[1]
 							: pair.players[0]
 						%}
-						{% include 'misc/table-btn.html.twig' with {
-							'link': path('turnament_stats', {
+						<td>
+							<a href='{{ path('turnament_stats', {
 								'fromYear': fromYear,
 								'dow': dow,
 								'fsb': partner.person.fsb
-							}),
-							'content': partner.person.fullName
-						} %}
+							}) }}' class='btn-table'>{{ partner.person.fullName }}</a>
+						</td>
 					{% endif %}
 
 					<td>

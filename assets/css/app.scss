@@ -11,12 +11,18 @@ $gray:                   #555555; // lighten($gray-base, 33.5%)
 $gray-light:             #777777; // lighten($gray-base, 46.7%)
 $gray-lighter:           #eeeeee; // lighten($gray-base, 93.5%)
 
-$green: #006E58;
+//$green: #006E58;
 $green: #207160;
 $red: #B40000;
 $white: #FFF;
 $black: #000;
 $black: #424242;
+
+// Suit colors used by JS-enhanced suit symbols.
+$suit-black: #001a80;
+$suit-red: $red;
+$suit-green: $green;
+$suit-yellow: #ff660d;
 
 $pad-xs: 0.2em;
 $pad-sm: 0.5em;
@@ -45,6 +51,8 @@ $secondary: $red;
 /*$text-color: $gray-darker;*/
 
 $table-accent-bg: $gray-lighter;
+
+//$border-radius: 0;
 
 /* Imports */
 

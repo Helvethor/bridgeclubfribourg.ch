@@ -67,3 +67,28 @@ a:hover
 	text-align: left !important;
 }
 
+.black, .red, .green, .yellow
+{
+	font-size: $font-size-base * 1.4;
+}
+
+.black
+{
+	color: $suit-black;
+}
+
+.red
+{
+	color: $suit-red;
+}
+
+.green
+{
+	color: $suit-green;
+}
+
+.yellow
+{
+	color: $suit-yellow;
+}
+

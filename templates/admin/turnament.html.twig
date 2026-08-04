@@ -114,21 +114,22 @@
                         <a href='{{ turnament.externalLink }}'>lien externe</a>
                     </td>
                 {% else %}
-                    {% include 'misc/table-btn.html.twig' with {
-                        'link': path('turnament_result', {
+                    <td>
+                        <a href='{{ path('turnament_result', {
                             'day': turnament.date | date( 'd' ),
                             'month': turnament.date | date( 'm' ),
                             'year': turnament.date | date( 'Y' ),
-                        }),
-                        'content': turnament.date | date('d/m/Y')
-                    } %}
+                        }) }}' class='btn-table'>{{ turnament.date | date('d/m/Y') }}</a>
+                    </td>
                     <td>
-                        <a href='{{ turnament.getFilesUrl().xlsFile }}'>full-xls</a>
-                        <a href='{{ turnament.getFilesUrl().csvPairFile }}'>pair-csv</a>
-                        <a href='{{ turnament.getFilesUrl().csvBoardFile }}'>board-csv</a>
-                        {% if turnament.getCustomFileUrl() %}
-                            <a href='{{ turnament.getCustomFileUrl() }}'>donnes</a>
-                        {% endif %}
+                        <div class='d-flex flex-wrap gap-1 justify-content-center'>
+                            <a href='{{ turnament.getFilesUrl().xlsFile }}' class='btn-table'>full-xls</a>
+                            <a href='{{ turnament.getFilesUrl().csvPairFile }}' class='btn-table'>pair-csv</a>
+                            <a href='{{ turnament.getFilesUrl().csvBoardFile }}' class='btn-table'>board-csv</a>
+                            {% if turnament.getCustomFileUrl() %}
+                                <a href='{{ turnament.getCustomFileUrl() }}' class='btn-table'>donnes</a>
+                            {% endif %}
+                        </div>
                     </td>
                 {% endif %}
                 <td>

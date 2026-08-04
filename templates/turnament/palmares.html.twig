@@ -107,14 +107,13 @@
 						<td>{{ rank }}</td>
 						{% set rank = rank + 1 %}
 						<td>{{ performance.person.fsbNice }}</td>
-							{% include 'misc/table-btn.html.twig' with {
-								'link': path('turnament_stats', {
-									'fromYear': fromYear,
-									'dow': dow,
-									'fsb': performance.person.fsb
-								}),
-								'content': performance.person.fullName
-							} %}
+						<td>
+							<a href='{{ path('turnament_stats', {
+								'fromYear': fromYear,
+								'dow': dow,
+								'fsb': performance.person.fsb
+							}) }}' class='btn-table'>{{ performance.person.fullName }}</a>
+						</td>
 						<td>{{ performance.tCount }}</td>
 						<td>{{ (performance.pv / performance.tCount) | number_format(2) }}</td>
 						<td>{{ performance.pv }}</td>

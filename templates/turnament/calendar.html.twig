@@ -84,19 +84,17 @@
 							
 							{% if day.turnament is defined %}
                                 {% if day.turnament.isExternal %}
-                                    {% include 'misc/table-btn.html.twig' with {
-                                        'link': day.turnament.externalLink,
-										'content': day.date | date('d') ~ '<br>Résultats'
-                                    } %}
+									<td>
+										<a href='{{ day.turnament.externalLink }}' class='btn-table'>{{ day.date | date('d') }}<br>Résultats</a>
+									</td>
                                 {% else %}
-                                    {% include 'misc/table-btn.html.twig' with {
-                                        'link': path('turnament_result', {
-                                            'day': day.date | date('d'), 
-                                            'month': day.date | date('m'), 
-                                            'year': day.date | date('Y') 
-                                        }),
-										'content': day.date | date('d') ~ '<br>Résultats'
-                                    } %}
+									<td>
+										<a href='{{ path('turnament_result', {
+											'day': day.date | date('d'),
+											'month': day.date | date('m'),
+											'year': day.date | date('Y')
+										}) }}' class='btn-table'>{{ day.date | date('d') }}<br>Résultats</a>
+									</td>
                                 {% endif %}
 							{% elseif day.registrationBoard is defined %}
                                 {% if day.registrationBoard.searchOnly %}
@@ -104,14 +102,13 @@
                                 {% else %}
                                     {% set text = 'Inscriptions' %}
                                 {% endif %}
-                                {% include 'misc/table-btn.html.twig' with {
-									'link': path('turnament_registrations', {
-                                        'day': day.date | date('d'), 
-                                        'month': day.date | date('m'), 
-                                        'year': day.date | date('Y') 
-									}),
-									'content': day.date | date('d') ~ '<br>' ~ text
-								} %}
+								<td>
+									<a href='{{ path('turnament_registrations', {
+										'day': day.date | date('d'),
+										'month': day.date | date('m'),
+										'year': day.date | date('Y')
+									}) }}' class='btn-table'>{{ day.date | date('d') }}<br>{{ text }}</a>
+								</td>
 							{% else %}
 								<td>{{ day.date | date('d') }}<br>&nbsp;</td>
 							{% endif %}

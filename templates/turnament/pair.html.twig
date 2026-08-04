@@ -123,15 +123,14 @@
 				{% if loop.index0 == 0 %}
 
 					<tr class='{{ group }}'>
-                        {% include 'misc/table-btn.html.twig' with {
-                            'link': path('turnament_board', {
+                        <td>
+                            <a href='{{ path('turnament_board', {
                                 'day': turnament.date | date ( 'd' ),
                                 'month': turnament.date | date ( 'm' ),
                                 'year': turnament.date | date ( 'Y' ),
                                 'no': board.no
-                            }),
-                            'content': board.no
-                        } %}
+                            }) }}' class='btn-table'>{{ board.no }}</a>
+                        </td>
 
                         {% if board.turnament.isIndividual %}
                             <td rowspan="{{ confrontation.continuity }}">
@@ -147,39 +146,31 @@
                                 {{ board.pairO.no }}
                             </td>
                         {% else %}
-                            {% include 'misc/table-btn.html.twig' with {
-                                'link': path('turnament_pair', {
+                            <td rowspan="{{ confrontation.continuity }}">
+                                <a href='{{ path('turnament_pair', {
                                     'day': turnament.date | date ( 'd' ),
                                     'month': turnament.date | date ( 'm' ),
                                     'year': turnament.date | date ( 'Y' ),
                                     'no': board.pairNS.no
-                                }),
-                                'content': board.pairNS.no,
-                                'attributes': 'rowspan=' ~ confrontation.continuity
-                            } %}
-                            {% include 'misc/table-btn.html.twig' with {
-                                'link': path('turnament_pair', {
+                                }) }}' class='btn-table'>{{ board.pairNS.no }}</a>
+                            </td>
+                            <td rowspan="{{ confrontation.continuity }}">
+                                <a href='{{ path('turnament_pair', {
                                     'day': turnament.date | date ( 'd' ),
                                     'month': turnament.date | date ( 'm' ),
                                     'year': turnament.date | date ( 'Y' ),
                                     'no': board.pairEO.no
-                                }),
-                                'content': board.pairEO.no,
-                                'attributes': 'rowspan=' ~ confrontation.continuity
-                            } %}
+                                }) }}' class='btn-table'>{{ board.pairEO.no }}</a>
+                            </td>
 
-                            {% include 'misc/table-btn.html.twig' with {
-                                'link': path('turnament_pair', {
+                            <td rowspan="{{ confrontation.continuity }}">
+                                <a href='{{ path('turnament_pair', {
                                     'day': turnament.date | date ( 'd' ),
                                     'month': turnament.date | date ( 'm' ),
                                     'year': turnament.date | date ( 'Y' ),
                                     'no': view.opponentPair.no
-                                }),
-                                'content': view.opponentPair.players[0].person.fullName
-                                    ~ '<br>'
-                                    ~ view.opponentPair.players[1].person.fullName,
-                                'attributes': 'rowspan=' ~ confrontation.continuity
-                            } %}
+                                }) }}' class='btn-table'>{{ view.opponentPair.players[0].person.fullName }}<br>{{ view.opponentPair.players[1].person.fullName }}</a>
+                            </td>
                         {% endif %}
 
 						<td class='suit-pretty'>
@@ -226,15 +217,14 @@
 				{% else %}
 
 					<tr class='{{ group }}'>
-                        {% include 'misc/table-btn.html.twig' with {
-                            'link': path('turnament_board', {
+                        <td>
+                            <a href='{{ path('turnament_board', {
                                 'day': turnament.date | date ( 'd' ),
                                 'month': turnament.date | date ( 'm' ),
                                 'year': turnament.date | date ( 'Y' ),
                                 'no': board.no
-                            }),
-                            'content': board.no
-                        } %}
+                            }) }}' class='btn-table'>{{ board.no }}</a>
+                        </td>
 						<td class='suit-pretty'>
 							{{ board.contract }}
 						</td>

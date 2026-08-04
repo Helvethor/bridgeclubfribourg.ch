@@ -56,13 +56,9 @@
     {% for news in newz %}
 
         <tr>
-            {% include 'misc/table-btn.html.twig' with {
-                'link': path(
-                    'admin_news',
-                    { 'id': news.id }
-                ),
-                'content': news.date | date('d/m/Y')
-            } %}
+            <td>
+                <a href='{{ path('admin_news', { 'id': news.id }) }}' class='btn-table'>{{ news.date | date('d/m/Y') }}</a>
+            </td>
             <td>{{ news.title }}</td>
             <td class='left-align'>{{ news.content | nl2br }}</td>
             <td>

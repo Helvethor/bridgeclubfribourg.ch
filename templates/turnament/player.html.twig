@@ -95,15 +95,14 @@
 				{% if loop.index0 == 0 %}
 
 					<tr class='{{ group }}'>
-                        {% include 'misc/table-btn.html.twig' with {
-                            'link': path('turnament_board', {
-                                'day': turnament.date | date ( 'd' ),
-                                'month': turnament.date | date ( 'm' ),
-                                'year': turnament.date | date ( 'Y' ),
-                                'no': board.no
-                            }),
-                            'content': board.no
-                        } %}
+						<td>
+							<a href='{{ path('turnament_board', {
+								'day': turnament.date | date ( 'd' ),
+								'month': turnament.date | date ( 'm' ),
+								'year': turnament.date | date ( 'Y' ),
+								'no': board.no
+							}) }}' class='btn-table'>{{ board.no }}</a>
+						</td>
 
                         <td rowspan="{{ confrontation.continuity }}">
                             {{ view.pairNS.players[0].person.fullName }}
@@ -145,15 +144,14 @@
 				{% else %}
 
 					<tr class='{{ group }}'>
-                        {% include 'misc/table-btn.html.twig' with {
-                            'link': path('turnament_board', {
-                                'day': turnament.date | date ( 'd' ),
-                                'month': turnament.date | date ( 'm' ),
-                                'year': turnament.date | date ( 'Y' ),
-                                'no': board.no
-                            }),
-                            'content': board.no
-                        } %}
+						<td>
+							<a href='{{ path('turnament_board', {
+								'day': turnament.date | date ( 'd' ),
+								'month': turnament.date | date ( 'm' ),
+								'year': turnament.date | date ( 'Y' ),
+								'no': board.no
+							}) }}' class='btn-table'>{{ board.no }}</a>
+						</td>
 						<td class='suit-pretty'>
 							{{ board.contract }}
 						</td>

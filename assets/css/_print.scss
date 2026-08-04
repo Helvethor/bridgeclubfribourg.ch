@@ -64,6 +64,26 @@
         color: $gray-dark !important;
     }
 
+    a.btn,
+    a.btn-table,
+    a.btn-outline-primary,
+    a.btn.btn-table,
+    a.btn.btn-outline-primary,
+    a.btn.btn-table.btn-outline-primary
+    {
+        display: inline !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        color: inherit !important;
+        font: inherit !important;
+        line-height: inherit !important;
+        text-align: inherit !important;
+    }
+
     //div { page-break-inside: avoid; }
     //caption { display: none }
 
@@ -80,7 +100,7 @@
 	{
         height: 100% !important;
         width: 100% !important;
-        border-collapse: collapse !important;
+        //border-collapse: collapse !important;
         background: transparent !important;
 		//border-collapse: separate !important;
         page-break-inside: auto !important;
@@ -111,13 +131,13 @@
         td {
             background: transparent !important;
             box-shadow: none !important;
-            border: 0 !important;
+            //border: 0 !important;
         }
 
         tr {
             /*background: transparent !important;
             box-shadow: none !important;*/
-            border: 0.01cm solid $gray-lighter !important;
+            //border: 0.01cm solid $gray-lighter !important;
 
             page-break-inside: avoid !important;
             page-break-after: auto !important;

@@ -90,24 +90,22 @@
                         {{ board.pairEO.no }}
                     </td>
                 {% else %}
-                    {% include 'misc/table-btn.html.twig' with {
-                        'link': path('turnament_pair', {
+                    <td>
+                        <a href='{{ path('turnament_pair', {
                             'day': board.turnament.date | date( 'd' ),
                             'month': board.turnament.date | date( 'm' ),
                             'year': board.turnament.date | date( 'Y' ),
                             'no': board.pairNS.no,
-                        }),
-                        'content': board.pairNS.no
-                    } %}
-                    {% include 'misc/table-btn.html.twig' with {
-                        'link': path('turnament_pair', {
+                        }) }}' class='btn-table'>{{ board.pairNS.no }}</a>
+                    </td>
+                    <td>
+                        <a href='{{ path('turnament_pair', {
                             'day': board.turnament.date | date( 'd' ),
                             'month': board.turnament.date | date( 'm' ),
                             'year': board.turnament.date | date( 'Y' ),
                             'no': board.pairEO.no,
-                        }),
-                        'content': board.pairEO.no
-                    } %}
+                        }) }}' class='btn-table'>{{ board.pairEO.no }}</a>
+                    </td>
                 {% endif %}
 				<td class='suit-pretty'>
 					{{ board.contract }}
