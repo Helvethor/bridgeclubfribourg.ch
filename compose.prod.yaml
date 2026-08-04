@@ -9,6 +9,7 @@ services:
       
     volumes:
       - ./public/upload:/app/public/upload
+      - ./public/turnament:/app/public/turnament
     environment:
       APP_SECRET: ${APP_SECRET}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}

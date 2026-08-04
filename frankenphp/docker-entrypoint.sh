@@ -7,6 +7,28 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		composer install --prefer-dist --no-progress --no-interaction
 	fi
 
+	check_writable_dir() {
+		dir_path=$1
+		if ! mkdir -p "$dir_path"; then
+			echo "Cannot create directory: $dir_path"
+			exit 1
+		fi
+
+		test_file="$dir_path/.permission-check-$$"
+		if ! (umask 022 && : > "$test_file") 2>/dev/null; then
+			echo "Directory is not writable: $dir_path"
+			ls -ld "$dir_path" 2>/dev/null || true
+			exit 1
+		fi
+
+		rm -f "$test_file"
+	}
+
+	echo 'Checking mounted volume permissions...'
+	check_writable_dir /app/public/upload
+	check_writable_dir /app/public/turnament
+	check_writable_dir /app/public/turnament/csv
+
 	# Display information about the current project
 	# Or about an error in project initialization
 	php bin/console -V
@@ -42,12 +64,24 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			echo 'Database is ready'
 		fi
 
-		if php bin/console doctrine:migrations:up-to-date --no-interaction >/tmp/migrations_status.txt 2>&1; then
-			echo 'Existing schema detected; applying pending migrations...'
-			php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing
-		else
-			echo 'No existing schema detected; creating schema from current metadata...'
-			php bin/console doctrine:schema:create --no-interaction
+		echo 'Synchronizing Doctrine migration metadata...'
+		php bin/console doctrine:migrations:sync-metadata-storage --no-interaction
+
+		echo 'Applying pending database migrations...'
+		set +e
+		MIGRATION_OUTPUT=$(php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing 2>&1)
+		MIGRATION_EXIT_CODE=$?
+		set -e
+		printf '%s\n' "$MIGRATION_OUTPUT"
+
+		if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
+			if printf '%s\n' "$MIGRATION_OUTPUT" | grep -Eq 'SQLSTATE\[(42P07|42701)\]|already exists'; then
+				echo 'Schema already exists but migration metadata is behind; marking migrations as executed...'
+				php bin/console doctrine:migrations:version --add --all --no-interaction
+			else
+				echo 'Migration failed with a non-recoverable error.'
+				exit "$MIGRATION_EXIT_CODE"
+			fi
 		fi
 	fi
 

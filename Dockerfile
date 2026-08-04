@@ -171,7 +171,10 @@ EOF
 COPY --link --exclude=var --from=frankenphp_prod_builder /app /app
 # Group 0 + g=u for arbitrary-UID runtimes (e.g. OpenShift).
 COPY --chown=www-data:0 --from=frankenphp_prod_builder /app/var /app/var
-RUN chmod g=u /app/var
+RUN chmod g=u /app/var \
+	&& mkdir -p /app/public/turnament/csv \
+	&& chown -R www-data:www-data /app/public/turnament \
+	&& chmod -R u+rwX,go+rX /app/public/turnament
 
 COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 
