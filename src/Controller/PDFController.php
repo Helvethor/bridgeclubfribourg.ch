@@ -35,6 +35,9 @@ class PDFController extends AbstractController
             try {
                 @unlink($file);
 
+                $candidateHost = parse_url($candidate, PHP_URL_HOST);
+                $isLocalCandidateHost = $candidateHost !== null && in_array($candidateHost, ['localhost', '127.0.0.1', '::1'], true);
+
                 $browsershot = Browsershot::url($candidate)
                     ->setNodeBinary('/usr/bin/node')
                     ->setNodeModulePath('/usr/local/lib/node_modules')
@@ -51,7 +54,7 @@ class PDFController extends AbstractController
                     ])
                     ->noSandbox();
 
-                if (str_starts_with($candidate, 'https://') && $this->kernel->getEnvironment() !== 'prod') {
+                if (str_starts_with($candidate, 'https://') && ($this->kernel->getEnvironment() !== 'prod' || $isLocalCandidateHost)) {
                     $browsershot
                         ->ignoreHttpsErrors()
                         ->addChromiumArguments(['ignore-certificate-errors' => true]);
@@ -92,17 +95,24 @@ class PDFController extends AbstractController
         $path       = parse_url($url, PHP_URL_PATH) ?: '/';
         $query      = parse_url($url, PHP_URL_QUERY);
         $fragment   = parse_url($url, PHP_URL_FRAGMENT);
+        $localHosts = ['bridgeclubfribourg.ch', 'www.bridgeclubfribourg.ch', 'localhost', '127.0.0.1', '::1'];
 
-        if ($host !== null && in_array($host, ['bridgeclubfribourg.ch', 'www.bridgeclubfribourg.ch'], true)) {
-            $internal = 'http://127.0.0.1' . $path;
+        if ($host !== null && in_array($host, $localHosts, true)) {
+            $suffix = $path;
             if ($query !== null && $query !== '') {
-                $internal .= '?' . $query;
+                $suffix .= '?' . $query;
             }
             if ($fragment !== null && $fragment !== '') {
-                $internal .= '#' . $fragment;
+                $suffix .= '#' . $fragment;
             }
 
-            $candidates[] = $internal;
+            // Try proven in-container targets first.
+            $candidates[] = 'https://localhost' . $suffix;
+            $candidates[] = 'http://php' . $suffix;
+
+            // Keep loopback fallbacks for environments where these are reachable.
+            $candidates[] = 'https://127.0.0.1' . $suffix;
+            $candidates[] = 'http://127.0.0.1' . $suffix;
         }
 
         return array_values(array_unique($candidates));
