@@ -28,7 +28,7 @@
             {{ form_row(form.date) }}
         </div>
         <div class='col-12'>
-            {{ form_widget(form.send) }}
+            {{ form_widget(form.send, {'attr': {'class': 'btn btn-outline-black'}}) }}
         </div>
         {{ form_help(form) }}
     </div>
@@ -63,7 +63,7 @@
             <td class='left-align'>{{ news.content | nl2br }}</td>
             <td>
                 <form method='POST' action="{{ path( 'admin_news_delete', { id: news.id } ) }}">
-                    <input class='btn btn-danger' type='submit' value='X'>	
+                    <input class='btn btn-outline-danger' type='submit' value='X'>	
                 </form>
             </td>
         </tr>

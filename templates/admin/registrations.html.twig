@@ -53,14 +53,14 @@
                     <form method='POST' action='{{ path('admin_registrations_modify', {
                         'id': board.id
                     }) }}'>
-                        <input class='btn btn-primary' type='submit' value='O'>
+                        <input class='btn btn-outline-warning btn-outline-warn' type='submit' value='O'>
                     </form>
                 </td>
                 <td>
                     <form method='POST' action='{{ path('admin_registrations_delete', {
                         'id': board.id
                     }) }}'>
-                        <input class='btn btn-secondary' type='submit' value='X'>
+                        <input class='btn btn-outline-danger' type='submit' value='X'>
                     </form>
                 </td>
             </tr>

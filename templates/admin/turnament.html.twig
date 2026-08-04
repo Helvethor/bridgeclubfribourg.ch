@@ -26,7 +26,7 @@
         </div>
     <div class='row'>
         <div class='col-12 col-md-2'>
-            {{ form_widget(turnamentFileForm.submit, {'attr': {'class': 'btn-primary'}}) }}
+            {{ form_widget(turnamentFileForm.submit, {'attr': {'class': 'btn btn-outline-black'}}) }}
         </div>
     </div>
     {{ form_end(turnamentFileForm) }}
@@ -52,7 +52,7 @@
         </div>
         <div class='col-12'>
             {{ form_widget(turnamentBoardFileForm.submit,
-                {'attr': {'class': 'btn-primary'}}) }}
+                {'attr': {'class': 'btn btn-outline-black'}}) }}
         </div>
     </div>
     {{ form_end(turnamentBoardFileForm) }}
@@ -81,7 +81,7 @@
     <br>
     <div class='row'>
         <div class='col-12'>
-            {{ form_widget(externalLinkForm.submit, {'attr': {'class': 'btn-primary'}}) }}
+            {{ form_widget(externalLinkForm.submit, {'attr': {'class': 'btn btn-outline-black'}}) }}
         </div>
     </div>
     {{ form_end(externalLinkForm) }}
@@ -134,7 +134,7 @@
                 {% endif %}
                 <td>
                     <form method='POST' action="{{ url( 'admin_turnament_delete', { id: turnament.id } ) }}">
-                        <input class='btn btn-danger' type='submit' value='X'>	
+                        <input class='btn btn-outline-danger' type='submit' value='X'>	
                     </form>
                 </td>
             </tr>
