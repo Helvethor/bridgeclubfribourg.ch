@@ -39,25 +39,25 @@
 				&:nth-child(4n + 1) a:before
 				{
 					content: "♠  ";
-					color: $black;
+					color: $suit-black;
 				}
 				
 				&:nth-child(4n + 2) a:before
 				{
 					content: "♥  ";
-					color: $red;
+					color: $suit-red;
 				}
 				
 				&:nth-child(4n + 3) a:before
 				{
 					content: "♣  ";
-					color: $black;
+					color: $suit-green;
 				}
 				
 				&:nth-child(4n) a:before
 				{
 					content: "♦  ";
-					color: $red;
+					color: $suit-yellow;
 				}
 			}
 		}
