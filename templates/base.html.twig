@@ -12,7 +12,13 @@
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 		<link rel="manifest" href="/site.webmanifest">
 
+		<style>
+			html { visibility: hidden; }
+			html.ready { visibility: visible; }
+		</style>
+
 		{% block css %}
+            <link rel="preload" href="{{ asset('build/app.css') }}" as="style"/>
             <link href="{{ asset('build/app.css') }}" rel='stylesheet'/>
 		{% endblock %}
 
@@ -39,9 +45,15 @@
 			{% endblock %}
 	
 	        {% block javascript %}
-                <script src="{{ asset('build/runtime.js') }}" type='text/javascript'></script>
-                <script src="{{ asset('build/app.js') }}" type='text/javascript'></script>
+                <script src="{{ asset('build/runtime.js') }}" type='text/javascript' defer></script>
+                <script src="{{ asset('build/app.js') }}" type='text/javascript' defer></script>
 			{% endblock %}
+
+			<script>
+				window.addEventListener('load', function () {
+					document.documentElement.classList.add('ready');
+				});
+			</script>
 
 		</div>
 
