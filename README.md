@@ -36,6 +36,31 @@ against a local or a remote model, with an optional network sandbox.
 
 **Enjoy!**
 
+## PDF Warmup
+
+This project runs a persistent PDF backend (`pdf`) and a one-shot warmup job (`pdf_warmup`) to preheat Chromium after startup.
+
+- Warmup script: `bin/pdf-warmup`
+- Warmup service: `pdf_warmup` in `compose.yaml`
+
+### Manual Warmup
+
+Run warmup explicitly:
+
+```sh
+sudo bin/compose prod run --rm pdf_warmup
+```
+
+### Warmup Settings
+
+These environment variables control warmup behavior:
+
+- `PDF_WARMUP_COUNT` (default: `3`): number of preheat render requests
+- `PDF_WARMUP_MAX_WAIT_SECONDS` (default: `30`): max wait for PDF backend health
+- `PDF_WARMUP_RETRY_DELAY_SECONDS` (default: `1`): delay between health retries
+
+By default, warmup requests are sent to `PDF_SERVICE_URL` (default: `http://pdf:3000`).
+
 ## Docs
 
 1. [Options available](docs/options.md)

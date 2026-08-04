@@ -1,0 +1,38 @@
+#!/bin/sh
+set -eu
+
+PDF_SERVICE_URL="${PDF_SERVICE_URL:-http://pdf:3000}"
+PDF_WARMUP_COUNT="${PDF_WARMUP_COUNT:-3}"
+PDF_WARMUP_MAX_WAIT_SECONDS="${PDF_WARMUP_MAX_WAIT_SECONDS:-30}"
+PDF_WARMUP_RETRY_DELAY_SECONDS="${PDF_WARMUP_RETRY_DELAY_SECONDS:-1}"
+
+health_url="${PDF_SERVICE_URL%/}/health"
+convert_url="${PDF_SERVICE_URL%/}/forms/chromium/convert/html"
+
+tries=0
+while ! curl --silent --show-error --fail --output /dev/null "$health_url"; do
+    tries=$((tries + 1))
+    if [ "$tries" -ge "$PDF_WARMUP_MAX_WAIT_SECONDS" ]; then
+        echo "[pdf-warmup] pdf service did not become ready in time" >&2
+        exit 1
+    fi
+    sleep "$PDF_WARMUP_RETRY_DELAY_SECONDS"
+done
+
+cat > /tmp/index.html <<'HTML'
+<!doctype html>
+<html><head><meta charset="utf-8"><title>PDF Warmup</title></head>
+<body><h1>PDF warmup</h1><p>Renderer preheat request.</p></body></html>
+HTML
+
+i=1
+while [ "$i" -le "$PDF_WARMUP_COUNT" ]; do
+    echo "[pdf-warmup] request $i/$PDF_WARMUP_COUNT"
+    curl --silent --show-error --fail \
+        --output /dev/null \
+        --form 'files=@/tmp/index.html;type=text/html' \
+        "$convert_url"
+    i=$((i + 1))
+done
+
+echo "[pdf-warmup] done"

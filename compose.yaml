@@ -6,10 +6,14 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      pdf:
+        condition: service_started
     environment:
       SERVER_NAME: ${SERVER_NAME:?No server name provided}, php:80
       DEFAULT_URI: http://${SERVER_NAME:?No server name provided}:${HTTP_PORT:?No HTTP port provided}
       APP_SECRET: ${APP_SECRET:?No app secret provided}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:?No admin password hash provided}
+      PDF_SERVICE_URL: ${PDF_SERVICE_URL:-http://pdf:3000}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:?No Mercure JWT secret provided}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:?No Mercure JWT secret provided}
       # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
@@ -66,6 +70,31 @@ services:
       - ./:/app
       - node_modules:/app/node_modules
     command: sh -c "npm install && npm run build"
+
+  pdf:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+    command:
+      - gotenberg
+      - --api-timeout=45s
+      - --log-level=info
+
+  pdf_warmup:
+    image: curlimages/curl:8.13.0
+    restart: "no"
+    depends_on:
+      pdf:
+        condition: service_started
+    environment:
+      PDF_SERVICE_URL: ${PDF_SERVICE_URL:-http://pdf:3000}
+      PDF_WARMUP_COUNT: ${PDF_WARMUP_COUNT:-3}
+      PDF_WARMUP_MAX_WAIT_SECONDS: ${PDF_WARMUP_MAX_WAIT_SECONDS:-30}
+      PDF_WARMUP_RETRY_DELAY_SECONDS: ${PDF_WARMUP_RETRY_DELAY_SECONDS:-1}
+    volumes:
+      - ./bin/pdf-warmup:/usr/local/bin/pdf-warmup:ro
+    entrypoint:
+      - sh
+      - /usr/local/bin/pdf-warmup
 
 volumes:
   caddy_data:

@@ -33,5 +33,9 @@ services:
             - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
             - { name: knp_menu.menu_builder, method: adminMenu, alias: admin }
 
+    App\Service\PDFGenerationService:
+        arguments:
+            $pdfServiceUrl: '%env(default::PDF_SERVICE_URL)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
