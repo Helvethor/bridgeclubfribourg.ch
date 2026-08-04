@@ -1,9 +1,12 @@
 import Encore from '@symfony/webpack-encore';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const isProduction = Encore.isProduction();
+const tinyMceOutputPath = path.join(__dirname, 'public/build/tinymce');
 
 Encore
     // directory where compiled assets will be stored
@@ -33,7 +36,6 @@ Encore
      * list of features, see:
      * https://symfony.com/doc/current/frontend.html#adding-more-features
      */
-    .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
     // Keep stable output names so Twig can always resolve build/app.css and build/app.js
@@ -47,18 +49,31 @@ Encore
     // enables Stimulus bridge with controllers.json
     .enableStimulusBridge('./assets/controllers.json')
 
-    // TinyMCE loads additional runtime assets (models, themes, icons, plugins)
-    // by URL at runtime; copy them to public/build so these requests succeed.
-    .copyFiles({
-        from: './node_modules/tinymce',
-        to: 'tinymce/[path][name].[ext]',
-        pattern: /\.(js|css|map|svg|png|gif|woff2?|ttf)$/,
-    })
-
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 ;
 
+// In dev, keep build artifacts to avoid full recopy/rebuild work on every run.
+if (isProduction) {
+    Encore.cleanupOutputBeforeBuild();
+}
+
+// TinyMCE runtime files are copied in production, and in dev only if not already present.
+if (isProduction || !fs.existsSync(tinyMceOutputPath)) {
+    Encore.copyFiles({
+        from: './node_modules/tinymce',
+        to: 'tinymce/[path][name].[ext]',
+        pattern: /\.(js|css|map|svg|png|gif|woff2?|ttf)$/,
+    });
+}
+
 const config = Encore.getWebpackConfig();
+
+config.cache = {
+    type: 'filesystem',
+    buildDependencies: {
+        config: [__filename],
+    },
+};
 
 export default config;
