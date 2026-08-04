@@ -20,6 +20,10 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('root');
 
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $menu->addChild('Public :');
+        }
+
         $menu->addChild('Accueil', ['route' => 'homepage']);
         $menu->addChild('Tournois', ['route' => 'turnament_calendar']);
         $menu->addChild('Palmarès', ['route' => 'turnament_palmares']);
