@@ -20,8 +20,8 @@
 		-->
 
 		{% block css %}
-            <link rel="preload" href="{{ asset('build/app.css') }}" as="style"/>
-            <link href="{{ asset('build/app.css') }}" rel='stylesheet' data-retry-asset='css'/>
+			<link rel="preload" href="{{ asset('build/app.css') }}" as="style"/>
+			<link href="{{ asset('build/app.css') }}" rel='stylesheet' data-retry-asset='css'/>
 		{% endblock %}
 
     </head>
@@ -47,8 +47,8 @@
 			{% endblock %}
 	
 	        {% block javascript %}
-                <script src="{{ asset('build/runtime.js') }}" type='text/javascript' defer data-retry-asset='js'></script>
-                <script src="{{ asset('build/app.js') }}" type='text/javascript' defer data-retry-asset='js'></script>
+			<script src="{{ asset('build/runtime.js') }}" type='text/javascript' defer data-retry-asset='js'></script>
+			<script src="{{ asset('build/app.js') }}" type='text/javascript' defer data-retry-asset='js'></script>
 			{% endblock %}
 
 			<script>

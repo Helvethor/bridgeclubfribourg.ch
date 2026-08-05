@@ -38,8 +38,7 @@ Encore
      */
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
-    // Keep stable output names so Twig can always resolve build/app.css and build/app.js
-    .enableVersioning(false)
+    .enableVersioning(Encore.isProduction())
     // enables single runtime chunk for faster development builds
     .enableSingleRuntimeChunk()
 

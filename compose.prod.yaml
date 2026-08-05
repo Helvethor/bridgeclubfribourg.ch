@@ -9,6 +9,7 @@ services:
       
     volumes:
       - ./public/upload:/app/public/upload
+      - ./public/build:/app/public/build
       - ./public/turnament:/app/public/turnament
     environment:
       APP_SECRET: ${APP_SECRET}
