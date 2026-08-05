@@ -75,12 +75,23 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		printf '%s\n' "$MIGRATION_OUTPUT"
 
 		if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
-			if printf '%s\n' "$MIGRATION_OUTPUT" | grep -Eq 'SQLSTATE\[(42P07|42701)\]|already exists'; then
-				echo 'Schema already exists but migration metadata is behind; marking migrations as executed...'
-				php bin/console doctrine:migrations:version --add --all --no-interaction
-			else
-				echo 'Migration failed with a non-recoverable error.'
-				exit "$MIGRATION_EXIT_CODE"
+			if printf '%s\n' "$MIGRATION_OUTPUT" | grep -q 'marked as non-transactional'; then
+				echo 'Non-transactional migration detected; retrying without all-or-nothing...'
+				set +e
+				MIGRATION_OUTPUT=$(php bin/console doctrine:migrations:migrate --no-interaction --no-all-or-nothing 2>&1)
+				MIGRATION_EXIT_CODE=$?
+				set -e
+				printf '%s\n' "$MIGRATION_OUTPUT"
+			fi
+
+			if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
+				if printf '%s\n' "$MIGRATION_OUTPUT" | grep -Eq 'SQLSTATE\[(42P07|42701)\]|already exists'; then
+					echo 'Schema already exists but migration metadata is behind; marking migrations as executed...'
+					php bin/console doctrine:migrations:version --add --all --no-interaction
+				else
+					echo 'Migration failed with a non-recoverable error.'
+					exit "$MIGRATION_EXIT_CODE"
+				fi
 			fi
 		fi
 	fi
