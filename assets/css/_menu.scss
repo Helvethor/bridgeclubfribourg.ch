@@ -1,17 +1,6 @@
 	#menu
 	{
 
-		span
-		{
-			font-size: $fix-md;
-			font-variant: small-caps;
-			font-weight: bold;
-			color: $gray;
-
-			display: block;
-			text-align: center;
-			padding-top: $btn-padding-y;
-		}
 
 		ul
 		{
@@ -32,11 +21,22 @@
 				* {
 					font-variant: small-caps;
 					font-size: $fix-md;
+					color: $gray;
+
+				}
+				
+				&.first span
+				{
+					font-weight: bold;
+
+					display: block;
+					text-align: center;
+					padding: $btn-padding-y $btn-padding-x;
+					border-bottom: 1px solid $gray-300;
 				}
 
 				a 
 				{
-					color: $gray;
 					width: 100%;
 
 					.menu-suit-symbol {

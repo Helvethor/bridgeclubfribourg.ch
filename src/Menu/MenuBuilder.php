@@ -33,7 +33,7 @@ class MenuBuilder
         $this->position = 3;
 
         if ($this->security->isGranted('ROLE_ADMIN')) {
-            $this->addMenuChild($menu, 'Public :', []);
+            $this->addMenuChild($menu, 'Public', []);
         }
 
         $this->addMenuChild($menu, 'Accueil', ['route' => 'homepage'], $this->position);
@@ -58,7 +58,7 @@ class MenuBuilder
 
         $menu = $this->factory->createItem('root');
 
-        $this->addMenuChild($menu, 'Gestion :', []);
+        $this->addMenuChild($menu, 'Gestion', []);
         $this->addMenuChild($menu, 'Tournois', ['route' => 'admin_turnament'], $this->position);
         $this->addMenuChild($menu, 'Inscriptions', ['route' => 'admin_registrations'], $this->position);
         $this->addMenuChild($menu, 'News', ['route' => 'admin_news'], $this->position);

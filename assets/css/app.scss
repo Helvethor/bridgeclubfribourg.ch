@@ -11,18 +11,29 @@ $gray:                   #555555; // lighten($gray-base, 33.5%)
 $gray-light:             #777777; // lighten($gray-base, 46.7%)
 $gray-lighter:           #eeeeee; // lighten($gray-base, 93.5%)
 
+// Suit colors
+//$suit-black: #001a80;
+$suit-black: #2B6496;
+$suit-red: #B40000;
+$suit-green: #207160;
+//$suit-yellow: #ff660d;
+$suit-yellow: #DDAA00;
+
 //$green: #006E58;
-$green: #207160;
-$red: #B40000;
+$green: $suit-green;
+$red: $suit-red;
+$yellow: $suit-yellow;
+$blue: $suit-black;
 $white: #FFF;
-$black: #000;
+//$black: #000;
 $black: #424242;
 
-// Suit colors used by JS-enhanced suit symbols.
-$suit-black: #001a80;
-$suit-red: $red;
-$suit-green: $green;
-$suit-yellow: #ff660d;
+$body-bg: #F5F5F5;
+$primary: $green;
+$secondary: $red;
+$warning: $yellow;
+$success: $green;
+$info: $blue;
 
 $pad-xs: 0.2em;
 $pad-sm: 0.5em;
@@ -45,9 +56,7 @@ $font-family-sans-serif: Verdana, Arial, Helvetica, sans-serif;
 $font-family-base: $font-family-serif;
 $font-size-base: 0.85rem;
 
-$body-bg: #F5F5F5;
-$primary: $green;
-$secondary: $red;
+
 /*$text-color: $gray-darker;*/
 
 $table-accent-bg: $gray-lighter;
