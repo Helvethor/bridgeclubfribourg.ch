@@ -12,12 +12,19 @@ $gray-light:             #777777; // lighten($gray-base, 46.7%)
 $gray-lighter:           #eeeeee; // lighten($gray-base, 93.5%)
 
 // Suit colors
+
 //$suit-black: #001a80;
-$suit-black: #2B6496;
-$suit-red: #B40000;
+//$suit-black: #2B6496;
+//$suit-red: #B40000;
 $suit-green: #207160;
 //$suit-yellow: #ff660d;
-$suit-yellow: #DDAA00;
+//$suit-yellow: #DDAA00;
+
+
+$suit-black: #1E4E79;
+$suit-red: #C92222;
+//$suit-green: #1e5c4e;
+$suit-yellow: #E6A100;
 
 //$green: #006E58;
 $green: $suit-green;
