@@ -21,6 +21,11 @@
 	width: max-content;
 }
 
+
+.btn-outline-warning {
+  --bs-btn-hover-color: white !important;
+}
+
 table.table {
 	border-collapse: separate !important;
 	border-spacing: 0;
