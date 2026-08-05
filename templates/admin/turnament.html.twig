@@ -99,7 +99,7 @@
 
         <thead>
             <tr>
-                <th>Id</th><th>Date</th><th>Fichiers transférés</th><th>Fichiers de traitement</th><th>Supprimer</th>
+                <th>Id</th><th>Date</th><th>Fichiers transférés</th><th>Fichiers de traitement</th><th>Actions</th>
             </tr>
         </thead>
 
@@ -138,7 +138,7 @@
                 {% endif %}
                 <td>
                     <form method='POST' action="{{ url( 'admin_turnament_delete', { id: turnament.id } ) }}">
-                        <input class='btn btn-outline-danger' type='submit' value='X'>	
+                        <input class='btn btn-outline-danger' type='submit' value='Supprimer'>
                     </form>
                 </td>
             </tr>

@@ -28,8 +28,7 @@
                 <th>Date</th>
                 <th>Heure</th>
                 <th>Type</th>
-                <th>Modifier</th>
-                <th>Supprimer</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -50,18 +49,18 @@
                     {% endif %}
                 </td>
                 <td>
-                    <form method='POST' action='{{ path('admin_registrations_modify', {
-                        'id': board.id
-                    }) }}'>
-                        <input class='btn btn-table btn-outline-warning btn-outline-warn' type='submit' value='O'>
-                    </form>
-                </td>
-                <td>
-                    <form method='POST' action='{{ path('admin_registrations_delete', {
-                        'id': board.id
-                    }) }}'>
-                        <input class='btn btn-table btn-outline-danger' type='submit' value='X'>
-                    </form>
+                    <div class='d-flex flex-wrap gap-1 justify-content-center'>
+                        <form method='POST' action='{{ path('admin_registrations_modify', {
+                            'id': board.id
+                        }) }}'>
+                            <input class='btn btn-table btn-outline-warning btn-outline-warn' type='submit' value='Modifier'>
+                        </form>
+                        <form method='POST' action='{{ path('admin_registrations_delete', {
+                            'id': board.id
+                        }) }}'>
+                            <input class='btn btn-table btn-outline-danger' type='submit' value='Supprimer'>
+                        </form>
+                    </div>
                 </td>
             </tr>
             {% endfor %}
