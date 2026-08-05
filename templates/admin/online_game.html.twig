@@ -45,7 +45,7 @@
 
 	<thead>
 		<tr>
-			<th>Id</th><th>Nom</th><th>Date</th><th>Heure</th><th>Url</th><th>Supprimer</th>
+			<th>Id</th><th>Nom</th><th>Date</th><th>Heure</th><th>Url</th><th>Actions</th>
 		</tr>
 	</thead>
 
@@ -61,7 +61,7 @@
 			</td>
 			<td>
 				<form method='POST' action="{{ url('admin_online_game_delete', { id: onlineGame.id }) }}">
-					<input class='btn btn-outline-danger' type='submit' value='X'>
+					<input class='btn btn-outline-danger' type='submit' value='Supprimer'>
 				</form>
 			</td>
 		</tr>
