@@ -141,20 +141,34 @@ table.table {
 		table-layout: fixed;
 		width: 100%;
 
-		thead th,
-		tbody td {
+		td,
+		th {
 			width: calc(100% / 7);
 		}
 
-		td,
-		th {
-			overflow-wrap: anywhere;
-			word-break: normal;
+		a.btn-table {
+			display: block;
+			width: 100%;
+			white-space: nowrap;
+			line-height: 1.25;
 		}
 
-		a.btn-table {
-			white-space: normal;
-			line-height: 1.25;
+		@include media-breakpoint-down(sm) {
+			table-layout: auto;
+			width: max-content;
+			min-width: 100%;
+
+			td,
+			th {
+				width: auto;
+				white-space: nowrap;
+				overflow-wrap: normal;
+				word-break: keep-all;
+			}
+
+			a.btn-table {
+				width: 100%;
+			}
 		}
 	}
 }
