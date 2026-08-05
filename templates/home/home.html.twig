@@ -35,7 +35,7 @@
 
 				<div class='col-12 col-sm-10 col-lg-9'>
 					<p><strong>{{ onlineGame.name }}</strong></p>
-					<p><a href='{{ onlineGame.link }}'>Cliquez ici</a> pour rejoindre notre tournoi en ligne!</p>
+					<p><a class='btn btn-outline-primary' href='{{ onlineGame.link }}'>Cliquez ici</a> pour rejoindre notre tournoi en ligne!</p>
 					<p>Rendez-vous le {{ onlineGame.dateAndTime | frenchDate('full') }} à {{ onlineGame.dateAndTime | date('H:i') }}.</p>
 				</div>
 
@@ -70,7 +70,7 @@
 						{% if turnament.isExternal %}
 							<a href='{{ turnament.externalLink }}'>
 						{% else %}
-							<a href='{{
+							<a class='btn btn-outline-primary' href='{{
 								path(
 									'turnament_result',
 									{
