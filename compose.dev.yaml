@@ -28,6 +28,14 @@ services:
       FRANKENPHP_WORKER_CONFIG: watch
       FRANKENPHP_SITE_CONFIG: hot_reload
       MERCURE_EXTRA_DIRECTIVES: demo
+      HTTPS_PORT: "${HTTPS_PORT:-21918}"
+      HTTP_PORT: "${HTTP_PORT:-21917}"
+      SERVER_NAME: "${SERVER_NAME:-localhost}"
+      DEFAULT_URI: "https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-21918}"
+      CADDY_EXTRA_CONFIG: |
+        http://localhost {
+            redir https://localhost:21918{uri}{?query} permanent
+        }
       # See https://xdebug.org/docs/all_settings#mode
       XDEBUG_MODE: "${XDEBUG_MODE:-develop}"
       APP_ENV: "${APP_ENV:?No app environment provided}"

@@ -1,7 +1,7 @@
     <div class='form-group mb-4'>
         <label for='filesGroup' class='form-label'>Fichiers</label>
         <div id='filesGroup' class='d-block'>
-        <div class='btn-group' role='group' aria-label='Fichiers'>
+        <div role='group' aria-label='Fichiers'>
             <a href='{{ path('pdf', { url: app.request.uri | url_encode }) }}' class='btn btn-outline-black' role='button'>Imprimer</a>
 
             {% if turnament is defined %}

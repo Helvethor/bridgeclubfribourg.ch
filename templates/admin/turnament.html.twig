@@ -99,7 +99,7 @@
 
         <thead>
             <tr>
-                <th>Id</th><th>Date</th><th>Fichiers</th><th>Supprimer</th>
+                <th>Id</th><th>Date</th><th>Fichiers transférés</th><th>Fichiers de traitement</th><th>Supprimer</th>
             </tr>
         </thead>
 
@@ -123,14 +123,18 @@
                     </td>
                     <td>
                         <div class='d-flex flex-wrap gap-1 justify-content-center'>
-                            <a href='{{ turnament.getFilesUrl().xlsFile }}' class='btn-table btn-outline-black'>full-xls</a>
-                            <a href='{{ turnament.getFilesUrl().csvPairFile }}' class='btn-table btn-outline-black'>pair-csv</a>
-                            <a href='{{ turnament.getFilesUrl().csvBoardFile }}' class='btn-table btn-outline-black'>board-csv</a>
+                            <a href='{{ turnament.getFilesUrl().xlsFile }}' class='btn-table btn-outline-black'>Original</a>
                             {% if turnament.getCustomFileUrl() %}
-                                <a href='{{ turnament.getCustomFileUrl() }}' class='btn-table btn-outline-black'>donnes</a>
+                                <a href='{{ turnament.getCustomFileUrl() }}' class='btn-table btn-outline-black'>Donnes</a>
                             {% endif %}
                         </div>
                     </td>
+                    <td>
+                        <div class='d-flex flex-wrap gap-1 justify-content-center'>
+                            <a href='{{ turnament.getFilesUrl().csvPairFile }}' class='btn-table btn-outline-black'>Paires</a>
+                            <a href='{{ turnament.getFilesUrl().csvBoardFile }}' class='btn-table btn-outline-black'>Donnes</a>
+                        </div>
+                    </td> 
                 {% endif %}
                 <td>
                     <form method='POST' action="{{ url( 'admin_turnament_delete', { id: turnament.id } ) }}">

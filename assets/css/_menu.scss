@@ -5,10 +5,12 @@
 		{
 			font-size: $fix-md;
 			font-variant: small-caps;
+			font-weight: bold;
 			color: $gray;
 
 			display: block;
 			text-align: center;
+			padding-top: $btn-padding-y;
 		}
 
 		ul
@@ -21,43 +23,42 @@
 
 			li 
 			{
-				margin-bottom: $fix-lg;
+				text-align: center;
+				margin-bottom: $fix-md;
+				/*&:not(:first-child):nth-child(2n) {
+					text-align: right;
+				}*/
 
-				font-variant: small-caps;
-				font-size: $fix-md;
+				* {
+					font-variant: small-caps;
+					font-size: $fix-md;
+				}
 
 				a 
 				{
 					color: $gray;
+					width: 100%;
 
-					&:hover 
-					{
-						color: $red;
+					.menu-suit-symbol {
+						display: inline-block;
+						min-width: 1em;
+						text-align: center;
+						padding: 0;
 					}
-				}
 
-				&:nth-child(4n + 1) a:before
-				{
-					content: "♠  ";
-					color: $suit-black;
-				}
-				
-				&:nth-child(4n + 2) a:before
-				{
-					content: "♥  ";
-					color: $suit-red;
-				}
-				
-				&:nth-child(4n + 3) a:before
-				{
-					content: "♣  ";
-					color: $suit-green;
-				}
-				
-				&:nth-child(4n) a:before
-				{
-					content: "♦  ";
-					color: $suit-yellow;
+					.menu-suit-symbol-black { color: $suit-black; }
+					.menu-suit-symbol-red { color: $suit-red; }
+					.menu-suit-symbol-green { color: $suit-green; }
+					.menu-suit-symbol-yellow { color: $suit-yellow; }
+
+					&:hover
+					{
+						color: white !important;
+
+						.menu-suit-symbol {
+							color: white !important;
+						}
+					}
 				}
 			}
 		}
