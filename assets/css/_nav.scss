@@ -31,5 +31,7 @@ div.turnamentNavigation
 	}
 }
 
-.files-btn {
+#filesGroup .btn {
+	margin-right: $fix-sm;
+	margin-bottom: $fix-sm;
 }
