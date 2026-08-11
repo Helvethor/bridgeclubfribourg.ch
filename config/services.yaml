@@ -37,5 +37,9 @@ services:
         arguments:
             $pdfServiceUrl: '%env(default::PDF_SERVICE_URL)%'
 
+    App\EventListener\BotFirewallListener:
+        arguments:
+            $cachePool: '@cache.app'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

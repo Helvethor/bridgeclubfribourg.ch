@@ -78,6 +78,12 @@ services:
       - gotenberg
       - --api-timeout=45s
       - --log-level=info
+      - --chromium-max-queue-size=5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
 
   pdf_warmup:
     image: curlimages/curl:8.13.0
@@ -101,7 +107,6 @@ volumes:
   caddy_config:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
-
 ###> doctrine/doctrine-bundle ###
   database_data:
 ###< doctrine/doctrine-bundle ###
