@@ -154,10 +154,10 @@
 						<td>N/A</td>
 					{% else %}
 
-						{% set pair = player.pairs[0] %}
-						{% set partner =  pair.players[0] == player
-							? pair.players[1]
-							: pair.players[0]
+						{% set pair = player.pairs.first %}
+						{% set partner =  pair.players.first == player
+							? pair.players|slice(1, 1)|first
+							: pair.players.first
 						%}
 						<td>
 							<a href='{{ path('turnament_stats', {

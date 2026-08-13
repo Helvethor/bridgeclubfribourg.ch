@@ -24,7 +24,7 @@
                         'day': turnament.date | date( 'd' ),
                         'month': turnament.date | date( 'm' ),
                         'year': turnament.date | date( 'Y' ),
-                        'no': turnament.players[0].no,
+                        'no': turnament.players.first.no,
                     }
                 )
             }}'>
@@ -40,7 +40,7 @@
                         'day': turnament.date | date( 'd' ),
                         'month': turnament.date | date( 'm' ),
                         'year': turnament.date | date( 'Y' ),
-                        'no': turnament.pairs[0].no,
+                        'no': turnament.pairs.first.no,
                     }
                 )
             }}'>
@@ -57,7 +57,7 @@
 					'day': turnament.date | date( 'd' ),
 					'month': turnament.date | date( 'm' ),
 					'year': turnament.date | date( 'Y' ),
-					'no' : turnament.boards[0].no
+					'no' : turnament.boards.first.no
 				}
 			)
 		}}'>

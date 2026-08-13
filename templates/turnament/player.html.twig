@@ -105,14 +105,14 @@
 						</td>
 
                         <td rowspan="{{ confrontation.continuity }}">
-                            {{ view.pairNS.players[0].person.fullName }}
+                            {{ view.pairNS.players.first.person.fullName }}
                             <br>
-                            {{ view.pairNS.players[1].person.fullName }}
+                            {{ view.pairNS.players|slice(1, 1)|first.person.fullName }}
                         </td>
                         <td rowspan="{{ confrontation.continuity }}">
-                            {{ view.pairEO.players[0].person.fullName }}
+                            {{ view.pairEO.players.first.person.fullName }}
                             <br>
-                            {{ view.pairEO.players[1].person.fullName }}
+                            {{ view.pairEO.players|slice(1, 1)|first.person.fullName }}
                         </td>
 
 						<td class='suit-pretty'>

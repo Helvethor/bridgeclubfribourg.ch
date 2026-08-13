@@ -99,9 +99,9 @@
                             'no': pair.no
                         }) }}' class='btn-table'>{{ pair.no }}</a>
                     </td>
-                    <td>{{ pair.players[0].person.fullName }}</td>
+                    <td>{{ pair.players.first.person.fullName }}</td>
                     {% if not turnament.isIndividual %}
-                        <td>{{ pair.players[1].person.fullName() }}</td>
+                        <td>{{ pair.players|slice(1, 1)|first.person.fullName }}</td>
                     {% endif %}
                     <td>{{ pair.mp }}</td>
                     <td>{{ pair.result }}%</td>

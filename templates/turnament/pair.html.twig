@@ -23,9 +23,9 @@
 <h1>Paire n°{{ pair.no }}, {{ turnament.date | frenchDate('full') }}</h1>
 
 <h2>
-	{{ pair.players[0].person.fullName }}, 
+	{{ pair.players.first.person.fullName }}, 
     {% if not turnament.isIndividual %}
-        {{ pair.players[1].person.fullName }}
+        {{ pair.players|slice(1, 1)|first.person.fullName }}
     {% endif %}
 </h2>
 
@@ -54,9 +54,9 @@
                             )
                         }}'
                         {% if pair == selectPair %}selected='selected'{% endif %}>
-                            {{ selectPair.no }} | {{ selectPair.players[0].person.fullName }}
-                            {% if not pair.boards[0].turnament.isIndividual %}
-                                , {{ selectPair.players[1].person.fullName }}
+                            {{ selectPair.no }} | {{ selectPair.players.first.person.fullName }}
+                            {% if not pair.boards.first.turnament.isIndividual %}
+                                , {{ selectPair.players|slice(1, 1)|first.person.fullName }}
                             {% endif %}
                         </option>
 
@@ -169,7 +169,7 @@
                                     'month': turnament.date | date ( 'm' ),
                                     'year': turnament.date | date ( 'Y' ),
                                     'no': view.opponentPair.no
-                                }) }}' class='btn-table'>{{ view.opponentPair.players[0].person.fullName }}<br>{{ view.opponentPair.players[1].person.fullName }}</a>
+                                }) }}' class='btn-table'>{{ view.opponentPair.players.first.person.fullName }}<br>{{ view.opponentPair.players|slice(1, 1)|first.person.fullName }}</a>
                             </td>
                         {% endif %}
 
