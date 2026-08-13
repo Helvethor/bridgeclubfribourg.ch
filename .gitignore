@@ -25,4 +25,6 @@ npm-debug.log
 yarn-error.log
 ###< Node.js ###
 
+.phpunit.cache
+
 *.code-workspace
