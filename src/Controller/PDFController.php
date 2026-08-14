@@ -31,7 +31,11 @@ class PDFController extends AbstractController
     {
         $limiter = $this->pdfLimiter->create($request->getClientIp());
         if (!$limiter->consume(1)->isAccepted()) {
-            return new Response('Too many PDF requests. Please try again later.', Response::HTTP_TOO_MANY_REQUESTS);
+            return new Response(
+                'Too many PDF requests. Please try again later.',
+                Response::HTTP_TOO_MANY_REQUESTS,
+                ['Retry-After' => '60']
+            );
         }
 
         $decodedUrl = urldecode($url);
@@ -52,7 +56,6 @@ class PDFController extends AbstractController
 
         $response = new BinaryFileResponse($result['file']);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $result['filename']);
-        $response->deleteFileAfterSend(true);
 
         return $response;
     }

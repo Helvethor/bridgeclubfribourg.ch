@@ -9,6 +9,10 @@
 parameters:
     turnament_upload_dir: '%kernel.project_dir%/public/upload/turnament'
     turnament_csv_dir: '%kernel.project_dir%/public/turnament/csv'
+    pdf_cache_dir: '%kernel.cache_dir%/pdf'
+    pdf_cache_ttl_seconds: 86400
+    pdf_cache_max_files: 2000
+    pdf_cache_max_bytes: 1073741824
 
 services:
     # default configuration for services in *this* file
@@ -37,6 +41,10 @@ services:
     App\Service\PDFGenerationService:
         arguments:
             $pdfServiceUrl: '%env(default::PDF_SERVICE_URL)%'
+            $pdfCacheDir: '%pdf_cache_dir%'
+            $pdfCacheTtlSeconds: '%pdf_cache_ttl_seconds%'
+            $pdfCacheMaxFiles: '%pdf_cache_max_files%'
+            $pdfCacheMaxBytes: '%pdf_cache_max_bytes%'
 
     App\EventListener\BotFirewallListener:
         arguments:

@@ -9,9 +9,17 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class PDFGenerationService
 {
+    private const CACHE_TTL_SECONDS = 86400;
+    private const CACHE_MAX_FILES = 2000;
+    private const CACHE_MAX_BYTES = 1073741824;
+
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly string $pdfServiceUrl = '',
+        private readonly string $pdfCacheDir = '',
+        private readonly int $pdfCacheTtlSeconds = self::CACHE_TTL_SECONDS,
+        private readonly int $pdfCacheMaxFiles = self::CACHE_MAX_FILES,
+        private readonly int $pdfCacheMaxBytes = self::CACHE_MAX_BYTES,
     )
     {
     }
@@ -21,21 +29,30 @@ class PDFGenerationService
      */
     public function generate(string $url): array
     {
-        @set_time_limit(120);
+        @set_time_limit(30);
 
         $requestStartedAt = microtime(true);
 
-        $path     = parse_url($url, PHP_URL_PATH) ?? '';
-        $filename = ltrim(str_replace('/', '-', $path), '-') . '-' . date('YmdHis') . '.pdf';
-        $pdfDir   = $this->kernel->getProjectDir() . '/var/pdf';
-        $file     = $pdfDir . '/' . $filename;
+        $pdfDir = $this->resolvePdfCacheDir();
+        $this->ensureDirectory($pdfDir, 'PDF cache');
+        $this->cleanupCache();
+
+        $path      = parse_url($url, PHP_URL_PATH) ?? '';
+        $cacheKey  = sha1($url);
+        $safeBase  = ltrim(str_replace('/', '-', $path), '-');
+        $basename  = $safeBase !== '' ? $safeBase : 'document';
+        $filename  = $basename . '.pdf';
+        $file     = $pdfDir . '/' . $cacheKey . '.pdf';
         $chromeDir = $this->kernel->getProjectDir() . '/var/chromium';
         $chromeSessionDir = $chromeDir . '/sessions';
         $chromeCrashDumpsDir = $chromeDir . '/crash-dumps';
         $chromeCacheDir = $chromeDir . '/cache';
 
-        if (!is_dir($pdfDir) && !mkdir($pdfDir, 0775, true) && !is_dir($pdfDir)) {
-            throw new \RuntimeException(sprintf('Unable to create PDF directory: %s', $pdfDir));
+        if (is_file($file) && (time() - filemtime($file)) < $this->pdfCacheTtlSeconds) {
+            return [
+                'file' => $file,
+                'filename' => $filename,
+            ];
         }
 
         if (!is_dir($chromeSessionDir) && !mkdir($chromeSessionDir, 0775, true) && !is_dir($chromeSessionDir)) {
@@ -59,7 +76,13 @@ class PDFGenerationService
                 ];
             }
 
+            if ($this->kernel->getEnvironment() === 'prod') {
+                throw new \RuntimeException('PDF generation via PDF_SERVICE_URL failed in production. Local fallback is disabled.');
+            }
+
             error_log('[PDF] remote generation unavailable, falling back to local Browsershot');
+        } elseif ($this->kernel->getEnvironment() === 'prod') {
+            throw new \RuntimeException('PDF_SERVICE_URL must be configured in production. Local fallback is disabled.');
         }
 
         $errors = [];
@@ -208,6 +231,125 @@ class PDFGenerationService
         return [
             'file' => $file,
             'filename' => $filename,
+        ];
+    }
+
+    /**
+     * @return array{removed_expired: int, removed_overflow: int, bytes_freed: int, remaining_files: int, remaining_bytes: int}
+     */
+    public function cleanupCache(): array
+    {
+        $pdfDir = $this->resolvePdfCacheDir();
+        if (!is_dir($pdfDir)) {
+            return [
+                'removed_expired' => 0,
+                'removed_overflow' => 0,
+                'bytes_freed' => 0,
+                'remaining_files' => 0,
+                'remaining_bytes' => 0,
+            ];
+        }
+
+        $now = time();
+        $removedExpired = 0;
+        $removedOverflow = 0;
+        $bytesFreed = 0;
+
+        $allFiles = glob($pdfDir . '/*.pdf');
+        if ($allFiles === false) {
+            $allFiles = [];
+        }
+
+        foreach ($allFiles as $path) {
+            if (!is_file($path)) {
+                continue;
+            }
+
+            $mtime = filemtime($path);
+            if ($mtime === false) {
+                continue;
+            }
+
+            if (($now - $mtime) <= $this->pdfCacheTtlSeconds) {
+                continue;
+            }
+
+            $size = filesize($path);
+            if (@unlink($path)) {
+                $removedExpired++;
+                $bytesFreed += $size !== false ? (int) $size : 0;
+            }
+        }
+
+        $remaining = glob($pdfDir . '/*.pdf');
+        if ($remaining === false) {
+            $remaining = [];
+        }
+
+        $entries = [];
+        $totalBytes = 0;
+        foreach ($remaining as $path) {
+            if (!is_file($path)) {
+                continue;
+            }
+
+            $size = filesize($path);
+            $mtime = filemtime($path);
+            if ($size === false || $mtime === false) {
+                continue;
+            }
+
+            $entries[] = [
+                'path' => $path,
+                'size' => (int) $size,
+                'mtime' => (int) $mtime,
+            ];
+            $totalBytes += (int) $size;
+        }
+
+        usort(
+            $entries,
+            static fn(array $a, array $b): int => $a['mtime'] <=> $b['mtime']
+        );
+
+        $maxFiles = max(1, $this->pdfCacheMaxFiles);
+        $maxBytes = max(1, $this->pdfCacheMaxBytes);
+        while (count($entries) > $maxFiles || $totalBytes > $maxBytes) {
+            $oldest = array_shift($entries);
+            if ($oldest === null) {
+                break;
+            }
+
+            if (@unlink($oldest['path'])) {
+                $removedOverflow++;
+                $bytesFreed += (int) $oldest['size'];
+                $totalBytes -= (int) $oldest['size'];
+            }
+        }
+
+        $finalFiles = glob($pdfDir . '/*.pdf');
+        if ($finalFiles === false) {
+            $finalFiles = [];
+        }
+
+        $finalBytes = 0;
+        foreach ($finalFiles as $path) {
+            if (!is_file($path)) {
+                continue;
+            }
+
+            $size = filesize($path);
+            if ($size !== false) {
+                $finalBytes += (int) $size;
+            }
+        }
+
+        return [
+            'removed_expired' => $removedExpired,
+            'removed_overflow' => $removedOverflow,
+            'bytes_freed' => $bytesFreed,
+            'remaining_files' => count($finalFiles),
+            'remaining_bytes' => max(0, $finalBytes),
         ];
     }
 
@@ -421,6 +563,22 @@ class PDFGenerationService
         }
 
         return array_values(array_unique($candidates));
+    }
+
+    private function resolvePdfCacheDir(): string
+    {
+        if ($this->pdfCacheDir !== '') {
+            return $this->pdfCacheDir;
+        }
+
+        return $this->kernel->getProjectDir() . '/var/cache/pdf';
+    }
+
+    private function ensureDirectory(string $path, string $label): void
+    {
+        if (!is_dir($path) && !mkdir($path, 0775, true) && !is_dir($path)) {
+            throw new \RuntimeException(sprintf('Unable to create %s directory: %s', $label, $path));
+        }
     }
 
     private function deleteDirectory(string $path): void

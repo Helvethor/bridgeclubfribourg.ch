@@ -33,6 +33,11 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	# Or about an error in project initialization
 	php bin/console -V
 
+	echo 'Pruning PDF cache...'
+	if ! php bin/console app:pdf-cache:cleanup --no-interaction; then
+		echo 'PDF cache cleanup failed at startup; continuing.'
+	fi
+
 	if [ -n "${DATABASE_URL:-}" ]; then
 		echo 'Waiting for database server and creating database if needed...'
 		ATTEMPTS_LEFT_TO_REACH_DATABASE=60
