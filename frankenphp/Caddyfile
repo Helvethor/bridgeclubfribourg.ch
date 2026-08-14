@@ -41,6 +41,13 @@
 
 	{$CADDY_SERVER_EXTRA_DIRECTIVES}
 
+	# Upstream may provide unresolved placeholders like {server_proto}/{server_port}.
+	# Replace forwarded transport headers with stable edge values for app trust.
+	request_header -X-Forwarded-Proto
+	request_header -X-Forwarded-Port
+	request_header X-Forwarded-Proto https
+	request_header X-Forwarded-Port 443
+
 	# Disable Topics tracking if not enabled explicitly: https://github.com/jkarlin/topics
 	header ?Permissions-Policy "browsing-topics=()"
 
