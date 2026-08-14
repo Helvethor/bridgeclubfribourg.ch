@@ -179,13 +179,8 @@ class Player
                     $opponentPair = $board->getPairNS();
                 }
 
-                if ($board->getScore() >= 0) {
-                    $scoreNS = $board->getScore();
-                    $scoreEO = '';
-                } else {
-                    $scoreEO = -$board->getScore();
-                    $scoreNS = '';
-                }
+                $scoreNS = $board->getScoreNS();
+                $scoreEO = $board->getScoreEO();
 
                 $confrontations[$i]['views'][] = [
                     'board' => $board,
