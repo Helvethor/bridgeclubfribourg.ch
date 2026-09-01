@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+set -eu
+
+# Manually promotes the current main branch to this production deployment.
+# Requires interactive confirmation; never intended to run unattended.
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PROJECT_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+cd "$PROJECT_ROOT"
+
+git fetch origin main --quiet
+
+CURRENT=$(git rev-parse --short HEAD)
+TARGET=$(git rev-parse --short origin/main)
+
+if [ "$CURRENT" = "$TARGET" ]; then
+  echo "Already up to date at $CURRENT."
+  exit 0
+fi
+
+echo "This will fast-forward $(pwd) from $CURRENT to $TARGET (origin/main) and rebuild the production stack."
+printf 'Continue? [y/N] '
+read -r reply
+case "$reply" in
+  y|Y) ;;
+  *) echo "Aborted." >&2; exit 1 ;;
+esac
+
+git merge --ff-only origin/main
+
+bin/compose prod build --pull
+bin/compose prod up --wait
+
+echo "Production promoted to $(git rev-parse --short HEAD) at $(date -Iseconds)"

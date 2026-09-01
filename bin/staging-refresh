@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+set -eu
+
+# Pulls the latest main, rebuilds the production-like stack, and health-checks it.
+# Intended to run unattended (cron/systemd timer) in a dedicated staging clone.
+# Never run this against the production deployment directory.
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PROJECT_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+cd "$PROJECT_ROOT"
+
+git fetch origin main --quiet
+git checkout main --quiet
+git reset --hard origin/main --quiet
+
+bin/compose prod build --pull
+bin/compose prod up --wait
+
+HEALTH_URL=${STAGING_HEALTH_URL:-http://localhost:${HTTP_PORT:-80}}
+if ! curl --fail --silent --show-error "$HEALTH_URL" > /dev/null; then
+  echo "Staging health check failed for $HEALTH_URL" >&2
+  exit 1
+fi
+
+echo "Staging refreshed successfully to $(git rev-parse --short HEAD) at $(date -Iseconds)"
