@@ -29,8 +29,8 @@ class RegistrationBoardType extends AbstractType {
             ->add('searchOnly', ChoiceType::class, [
                 'label' => 'Type',
                 'choices' => [
-                    'Recherche de partenaires' => false,
-                    'Inscriptions' => true
+                    'Recherche de partenaires' => true,
+                    'Inscriptions' => false
                 ]
             ])
             ->add('repeat', IntegerType::class, [
