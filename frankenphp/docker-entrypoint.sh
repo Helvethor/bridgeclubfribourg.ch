@@ -69,17 +69,17 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			echo 'Database is ready'
 		fi
 
-		echo 'Synchronizing Doctrine migration metadata...'
-		php bin/console doctrine:migrations:sync-metadata-storage --no-interaction
+		if find migrations -maxdepth 1 -name 'Version*.php' -print -quit | grep -q .; then
+			echo 'Synchronizing Doctrine migration metadata...'
+			php bin/console doctrine:migrations:sync-metadata-storage --no-interaction
 
-		echo 'Applying pending database migrations...'
-		set +e
-		MIGRATION_OUTPUT=$(php bin/console doctrine:migrations:migrate --no-interaction --no-all-or-nothing 2>&1)
-		MIGRATION_EXIT_CODE=$?
-		set -e
-		printf '%s\n' "$MIGRATION_OUTPUT"
+			echo 'Applying pending database migrations...'
+			set +e
+			MIGRATION_OUTPUT=$(php bin/console doctrine:migrations:migrate --no-interaction --no-all-or-nothing 2>&1)
+			MIGRATION_EXIT_CODE=$?
+			set -e
+			printf '%s\n' "$MIGRATION_OUTPUT"
 
-		if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
 			if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
 				if printf '%s\n' "$MIGRATION_OUTPUT" | grep -Eq 'SQLSTATE\[(42P07|42701)\]|already exists'; then
 					echo 'Schema already exists but migration metadata is behind; marking migrations as executed...'
@@ -89,6 +89,8 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 					exit "$MIGRATION_EXIT_CODE"
 				fi
 			fi
+		else
+			echo 'No Doctrine migrations registered; skipping migration step.'
 		fi
 	fi
 

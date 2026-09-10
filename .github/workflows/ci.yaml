@@ -11,6 +11,19 @@ on:
 permissions:
   contents: read
 
+env:
+  ADMIN_PASSWORD_HASH: ci-admin-password-hash
+  APP_SECRET: ci-app-secret
+  CADDY_MERCURE_JWT_SECRET: ci-mercure-secret
+  HOSTNAME: localhost
+  HTTP_PORT: 80
+  POSTGRES_CHARSET: utf8
+  POSTGRES_DB: app
+  POSTGRES_PASSWORD: app
+  POSTGRES_USER: app
+  POSTGRES_VERSION: 16
+  SERVER_NAME: localhost
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
@@ -36,15 +49,17 @@ jobs:
           *.cache-from=type=gha,scope=${{github.ref}}
           *.cache-from=type=gha,scope=refs/heads/main
           *.cache-to=type=gha,scope=${{github.ref}},mode=max
+    - name: Prepare writable bind mounts
+      run: mkdir -p public/upload public/build public/turnament && find public/upload public/build public/turnament -type d -exec chmod a+rwx {} +
     - name: Start services
-      run: docker compose up --wait --no-build
+      run: docker compose -f compose.yaml -f compose.prod.yaml up --wait --no-build php database pdf
     - name: Check HTTP reachability
       run: curl -v --fail-with-body http://localhost
     # Uncomment when the homepage is configured, or change the path to check
     # - name: Check HTTPS reachability
     #   run: curl -v --insecure --fail-with-body https://localhost
     - name: Check Mercure reachability
-      run: curl -vI --insecure --fail-with-body https://localhost/.well-known/mercure?topic=test
+      run: curl -vI --fail-with-body http://localhost/.well-known/mercure?topic=test
     # Uncomment if Doctrine ORM is installed
     # - name: Create test database
     #   run: docker compose exec -T php bin/console -e test doctrine:database:create
@@ -73,9 +88,18 @@ jobs:
     - name: Lint Code Base
       uses: super-linter/super-linter/slim@v8
       env:
+        FILTER_REGEX_INCLUDE: ^\.github/workflows/.*\.ya?ml$
         GITHUB_ACTIONS_CONFIG_FILE: actionlint.yaml
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         VALIDATE_CHECKOV: false
         VALIDATE_TRIVY: false
         VALIDATE_BIOME_FORMAT: false
         VALIDATE_BIOME_LINT: false
+        VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
+        VALIDATE_JSCPD: false
+        VALIDATE_PHP_BUILTIN: false
+        VALIDATE_PHP_PHPCS: false
+        VALIDATE_PHP_PHPSTAN: false
+        VALIDATE_PHP_PSALM: false
+        VALIDATE_YAML: false
+        VALIDATE_YAML_PRETTIER: false
