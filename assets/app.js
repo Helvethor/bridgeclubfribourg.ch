@@ -17,13 +17,15 @@ import './bootstrap';
 
 // jQuery and third-party libraries
 const $ = require('jquery');
+window.$ = window.jQuery = $;
 
 // Bootstrap 5 (includes Popper automatically)
 require('bootstrap');
 
 // DataTables with Bootstrap 5 styling
-require('datatables.net/js/dataTables.js');
-require('datatables.net-bs5/js/dataTables.bootstrap5.js');
+const dataTables = require('datatables.net/js/dataTables.mjs');
+window.DataTable = dataTables.default || dataTables.DataTable || dataTables;
+require('datatables.net-bs5/js/dataTables.bootstrap5.mjs');
 
 // Custom application JavaScript
 require('./js/event');
