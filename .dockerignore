@@ -27,6 +27,11 @@ public/bundles/
 tests/
 var/
 vendor/
+node_modules/
+public/upload/
+public/turnament/
+vendor-bin/
+phpstan-output.txt
 .editorconfig
 .env.*.local
 .env.local
