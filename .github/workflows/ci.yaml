@@ -44,7 +44,7 @@ jobs:
         persist-credentials: false
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      uses: docker/setup-buildx-action@v4
 
     - name: Prepare writable bind mounts
       run: mkdir -p public/upload public/build public/turnament var && find public/upload public/build public/turnament -type d -exec chmod a+rwx {} +
