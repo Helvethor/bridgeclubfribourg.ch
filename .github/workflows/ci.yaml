@@ -73,7 +73,7 @@ jobs:
         curl -v -k --fail-with-body https://localhost:21918/.well-known/mercure?topic=test
 
     - name: Setup Node.js for frontend and E2E tests
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         node-version: 22
         cache: 'npm'
