@@ -116,7 +116,7 @@ jobs:
         retention-days: 7
 
     - name: Build production Docker image
-      uses: docker/bake-action@v5
+      uses: docker/bake-action@v7
       with:
         pull: true
         load: false
