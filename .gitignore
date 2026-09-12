@@ -23,6 +23,8 @@ phpstan.neon
 /node_modules/
 npm-debug.log
 yarn-error.log
+/test-results/
+/playwright-report/
 ###< Node.js ###
 
 .phpunit.cache

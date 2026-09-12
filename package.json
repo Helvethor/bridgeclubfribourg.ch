@@ -3,6 +3,7 @@
     "devDependencies": {
         "@babel/core": "^8.0.1",
         "@babel/preset-env": "^8.0.2",
+        "@playwright/test": "^1.63.0",
         "@symfony/webpack-encore": "^7.2.0",
         "bootstrap": "^5.3.8",
         "file-loader": "^6.2.0",
@@ -17,7 +18,9 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production"
+        "build": "encore production",
+        "test:e2e": "playwright test",
+        "test": "playwright test"
     },
     "dependencies": {
         "@hotwired/stimulus": "^3.2.2",

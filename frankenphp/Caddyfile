@@ -50,7 +50,7 @@
 	request_header -X-Forwarded-Proto
 	request_header -X-Forwarded-Port
 	request_header X-Forwarded-Proto https
-	request_header X-Forwarded-Port 443
+	request_header X-Forwarded-Port {$HTTPS_PORT:443}
 
 	# Disable Topics tracking if not enabled explicitly: https://github.com/jkarlin/topics
 	header ?Permissions-Policy "browsing-topics=()"

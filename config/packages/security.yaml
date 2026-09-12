@@ -9,7 +9,7 @@ security:
                     admin:
                         # bcrypt hash of the admin password from env — regenerate with: bin/console security:hash-password
                         password: '%env(string:ADMIN_PASSWORD_HASH)%'
-                        roles: ['ROLE_ADMIN']
+                        roles: [ 'ROLE_ADMIN' ]
 
     firewalls:
         dev:
@@ -27,7 +27,7 @@ security:
                 invalidate_session: true
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+      - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:
@@ -40,4 +40,4 @@ when@test:
                     users:
                         admin:
                             password: 'testpassword'
-                            roles: ['ROLE_ADMIN']
+                            roles: [ 'ROLE_ADMIN' ]
