@@ -3,6 +3,8 @@
 # Versions
 FROM dunglas/frankenphp:1-php8.5 AS frankenphp_upstream
 
+FROM composer:2 AS composer
+
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/build/building/multi-stage/#stop-at-a-specific-build-stage
 # https://docs.docker.com/reference/compose-file/build/#target
@@ -14,6 +16,8 @@ FROM frankenphp_upstream AS frankenphp_base
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /app
+
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 # persistent deps
 # hadolint ignore=DL3008
