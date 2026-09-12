@@ -12,7 +12,9 @@ permissions:
   contents: read
 
 env:
-  ADMIN_PASSWORD_HASH: '$2y$04$hIywRDniTOt9nIkUbHhI6eKmBWPceDGe/6BKwUiO8TL4oxECbmwfy'
+  APP_ENV: dev
+  APP_DEBUG: 1
+  ADMIN_PASSWORD_HASH: '$2y$12$N3KtLJ3ny6DMFjy7NQsMz.sLK0oEabaCjooKS7vO8pACEqkRKAvRi'
   APP_SECRET: ci-app-secret
   CADDY_MERCURE_JWT_SECRET: ci-mercure-secret
   HOSTNAME: localhost
@@ -25,6 +27,7 @@ env:
   POSTGRES_USER: app
   POSTGRES_VERSION: 16
   SERVER_NAME: localhost
+  DATABASE_URL: postgresql://app:app@database:5432/app?serverVersion=16&charset=utf8
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -54,22 +57,10 @@ jobs:
         curl -v -k --fail-with-body https://localhost:21918
         curl -v -k --fail-with-body https://localhost:21918/.well-known/mercure?topic=test
 
-    - name: Setup test database
-      run: |
-        docker compose -f compose.yaml -f compose.dev.yaml exec -T php bin/console --env=test doctrine:database:create --if-not-exists
-        docker compose -f compose.yaml -f compose.dev.yaml exec -T php bin/console --env=test doctrine:schema:create
+    - name: Install PHP development dependencies
+      run: docker compose -f compose.yaml -f compose.dev.yaml exec -T php composer install --prefer-dist --no-interaction
 
-    - name: Symfony Linters & Schema Validation
-      run: |
-        docker compose -f compose.yaml -f compose.dev.yaml exec -T php bin/console lint:yaml config
-        docker compose -f compose.yaml -f compose.dev.yaml exec -T php bin/console lint:twig templates
-        docker compose -f compose.yaml -f compose.dev.yaml exec -T php bin/console lint:container
-        docker compose -f compose.yaml -f compose.dev.yaml exec -T php bin/console doctrine:schema:validate
-
-    - name: Run PHPUnit Test Suite
-      run: docker compose -f compose.yaml -f compose.dev.yaml exec -T php composer test
-
-    - name: Setup Node.js for E2E Tests
+    - name: Setup Node.js for frontend and E2E tests
       uses: actions/setup-node@v4
       with:
         node-version: 22
@@ -77,6 +68,24 @@ jobs:
 
     - name: Install NPM dependencies
       run: npm ci
+
+    - name: Build frontend assets
+      run: npm run build
+
+    - name: Setup test database
+      run: |
+        docker compose -f compose.yaml -f compose.dev.yaml exec -T -e APP_ENV=test -e DATABASE_URL='postgresql://app:app@database:5432/app_test?serverVersion=16&charset=utf8' php bin/console doctrine:database:create --if-not-exists
+        docker compose -f compose.yaml -f compose.dev.yaml exec -T -e APP_ENV=test -e DATABASE_URL='postgresql://app:app@database:5432/app_test?serverVersion=16&charset=utf8' php bin/console doctrine:schema:create
+
+    - name: Symfony Linters & Schema Validation
+      run: |
+        docker compose -f compose.yaml -f compose.dev.yaml exec -T -e APP_ENV=test -e DATABASE_URL='postgresql://app:app@database:5432/app_test?serverVersion=16&charset=utf8' php bin/console lint:yaml config
+        docker compose -f compose.yaml -f compose.dev.yaml exec -T -e APP_ENV=test -e DATABASE_URL='postgresql://app:app@database:5432/app_test?serverVersion=16&charset=utf8' php bin/console lint:twig templates
+        docker compose -f compose.yaml -f compose.dev.yaml exec -T -e APP_ENV=test -e DATABASE_URL='postgresql://app:app@database:5432/app_test?serverVersion=16&charset=utf8' php bin/console lint:container
+        docker compose -f compose.yaml -f compose.dev.yaml exec -T -e APP_ENV=test -e DATABASE_URL='postgresql://app:app@database:5432/app_test?serverVersion=16&charset=utf8' php bin/console doctrine:schema:validate
+
+    - name: Run PHPUnit Test Suite
+      run: docker compose -f compose.yaml -f compose.dev.yaml exec -T -e APP_ENV=test -e DATABASE_URL='postgresql://app:app@database:5432/app_test?serverVersion=16&charset=utf8' php composer test
 
     - name: Install Playwright browsers and dependencies
       run: npx playwright install --with-deps chromium
