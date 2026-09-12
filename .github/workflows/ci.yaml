@@ -49,6 +49,16 @@ jobs:
     - name: Prepare writable bind mounts
       run: mkdir -p public/upload public/build public/turnament var && find public/upload public/build public/turnament -type d -exec chmod a+rwx {} +
 
+    - name: Setup PHP and Composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.5'
+        extensions: intl, pdo_pgsql
+        coverage: none
+
+    - name: Install PHP development dependencies
+      run: composer install --prefer-dist --no-interaction
+
     - name: Start development services
       run: docker compose -f compose.yaml -f compose.dev.yaml up --wait --build php database pdf
 
@@ -56,9 +66,6 @@ jobs:
       run: |
         curl -v -k --fail-with-body https://localhost:21918
         curl -v -k --fail-with-body https://localhost:21918/.well-known/mercure?topic=test
-
-    - name: Install PHP development dependencies
-      run: docker compose -f compose.yaml -f compose.dev.yaml exec -T php composer install --prefer-dist --no-interaction
 
     - name: Setup Node.js for frontend and E2E tests
       uses: actions/setup-node@v4
