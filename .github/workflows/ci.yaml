@@ -140,7 +140,7 @@ jobs:
         fetch-depth: 0
         persist-credentials: false
     - name: Lint Code Base
-      uses: super-linter/super-linter/slim@v8
+      uses: super-linter/super-linter/slim@v9
       env:
         FILTER_REGEX_INCLUDE: ^\.github/workflows/.*\.ya?ml$
         GITHUB_ACTIONS_CONFIG_FILE: actionlint.yaml
