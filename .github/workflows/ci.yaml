@@ -60,7 +60,11 @@ jobs:
       run: composer install --prefer-dist --no-interaction
 
     - name: Start development services
-      run: docker compose -f compose.yaml -f compose.dev.yaml up --wait --build php database pdf
+      run: |
+        if ! docker compose -f compose.yaml -f compose.dev.yaml up --wait --build php database pdf; then
+          docker compose -f compose.yaml -f compose.dev.yaml logs --no-color php database pdf
+          exit 1
+        fi
 
     - name: Setup development database schema
       run: |
