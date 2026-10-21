@@ -80,6 +80,8 @@ promotion. Do not promote a revision newer than the one validated in staging.
 
 The Mercure configuration explicitly uses protocol compatibility version 8 to
 preserve the existing publisher/subscriber JWT behavior with current runtimes.
+Its explicit hub name shares the transport across the public and internal sites.
+The development/CI override no longer enables Mercure's removed `demo` directive.
 KnpMenu uses its Twig renderer; the removed `templating` option is not supported
 by KnpMenuBundle 3.8 and later.
 
