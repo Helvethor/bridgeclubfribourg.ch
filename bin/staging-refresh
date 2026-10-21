@@ -13,8 +13,9 @@ git fetch origin main --quiet
 git checkout main --quiet
 git reset --hard origin/main --quiet
 
+bin/compose prod run --rm --no-deps node sh -c 'npm ci && npm run build'
 bin/compose prod build --pull
-bin/compose prod up --wait
+bin/compose prod up --wait php database pdf pdf_warmup
 
 HEALTH_URL=${STAGING_HEALTH_URL:-http://localhost:${HTTP_PORT:-80}}
 if ! curl --fail --silent --show-error "$HEALTH_URL" > /dev/null; then

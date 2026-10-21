@@ -79,6 +79,9 @@ confirm the fast-forward and rebuild. Verify the production HTTP endpoint after
 promotion. Do not promote a revision newer than the one validated in staging.
 The production Node service uses `npm ci` so deployment installs the reviewed
 lock file without rewriting it.
+Both deployment scripts finish the frontend build before building the PHP image,
+so Symfony's warmed entrypoint cache references the deployed asset hashes. They
+then start only the application services, without rerunning the frontend build.
 
 The Mercure configuration explicitly uses protocol compatibility version 8 to
 preserve the existing publisher/subscriber JWT behavior with current runtimes.
