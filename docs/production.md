@@ -65,6 +65,26 @@ Example with the DigitalOcean Domains service ("Networking" > "Domains"):
 
 ## Deploying
 
+### Staging promotion pipeline
+
+Update Composer and npm lock files within the existing version constraints in
+the staging checkout, build frontend assets, and validate the application before
+merging the update pull request into `main` after its CI checks pass.
+Run `bin/staging-refresh` in the clean staging
+checkout to rebuild and health-check that exact revision. This script resets the
+staging checkout to `origin/main`, so never run it with uncommitted changes.
+
+After staging passes, run `bin/promote-to-prod` in the production checkout and
+confirm the fast-forward and rebuild. Verify the production HTTP endpoint after
+promotion. Do not promote a revision newer than the one validated in staging.
+
+The Mercure configuration explicitly uses protocol compatibility version 8 to
+preserve the existing publisher/subscriber JWT behavior with current runtimes.
+KnpMenu uses its Twig renderer; the removed `templating` option is not supported
+by KnpMenuBundle 3.8 and later.
+
+### Server setup
+
 Copy your project on the server using `git clone`, `scp`, or any other tool
 that may fit your need.
 If you use GitHub, you may want to use [a deploy key](https://docs.github.com/en/free-pro-team@latest/developers/overview/managing-deploy-keys#deploy-keys).
