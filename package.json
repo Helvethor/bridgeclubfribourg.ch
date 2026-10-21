@@ -34,7 +34,7 @@
     },
     "version": "0.0.0",
     "allowScripts": {
-        "@parcel/watcher@2.5.6": true,
-        "core-js@3.50.0": true
+        "@parcel/watcher@2.6.0": true,
+        "core-js@3.51.0": true
     }
 }
