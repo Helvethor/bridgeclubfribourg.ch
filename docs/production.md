@@ -77,6 +77,8 @@ staging checkout to `origin/main`, so never run it with uncommitted changes.
 After staging passes, run `bin/promote-to-prod` in the production checkout and
 confirm the fast-forward and rebuild. Verify the production HTTP endpoint after
 promotion. Do not promote a revision newer than the one validated in staging.
+The production Node service uses `npm ci` so deployment installs the reviewed
+lock file without rewriting it.
 
 The Mercure configuration explicitly uses protocol compatibility version 8 to
 preserve the existing publisher/subscriber JWT behavior with current runtimes.
