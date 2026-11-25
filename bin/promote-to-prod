@@ -28,7 +28,8 @@ esac
 
 git merge --ff-only origin/main
 
+bin/compose prod run --rm --no-deps node sh -c 'npm ci && npm run build'
 bin/compose prod build --pull
-bin/compose prod up --wait
+bin/compose prod up --wait php database pdf pdf_warmup
 
 echo "Production promoted to $(git rev-parse --short HEAD) at $(date -Iseconds)"

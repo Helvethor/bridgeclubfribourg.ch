@@ -25,6 +25,8 @@
 	encode zstd br gzip
 
 	mercure {
+		name app
+		protocol_version_compatibility 8
 		transport bolt {
 			path /data/mercure.db
 		}
