@@ -49,16 +49,18 @@ test.describe('Tournament Interactive UI & Custom JavaScript Plugins', () => {
   });
 
   test('redirect.js triggers navigation when select-redirect dropdown changes', async ({ page }) => {
-    await page.goto('/turnament/2026/05');
+    const currentYear = new Date().getFullYear();
+    const nextYear = currentYear + 1;
+    await page.goto(`/turnament/${currentYear}/05`);
 
     const yearSelect = page.locator('#calendarYearSelect.select-redirect');
-    if (await yearSelect.count() > 0) {
-      await Promise.all([
-        page.waitForNavigation(),
-        yearSelect.selectOption({ index: 0 }),
-      ]);
-      expect(page.url()).toContain('/turnament/');
-    }
+    await yearSelect.selectOption(`/turnament/${nextYear}/05`);
+    await expect(page).toHaveURL(new RegExp(`/turnament/${nextYear}/05$`));
+    await expect(yearSelect).toHaveValue(`/turnament/${nextYear}/05`);
+
+    await page.locator('#calendarMonthSelect').selectOption(`/turnament/${nextYear}/06`);
+    await expect(page).toHaveURL(new RegExp(`/turnament/${nextYear}/06$`));
+    await expect(yearSelect).toHaveValue(`/turnament/${nextYear}/06`);
   });
 
   test('registration type switcher toggles appropriate form visibility', async ({ page }) => {

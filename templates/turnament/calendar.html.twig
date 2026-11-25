@@ -21,7 +21,7 @@
 		<div class='col-12 col-sm-6 col-md-4 form-group'>
 			<label for='calendarYearSelect' class='form-label'>Année</label>
 			<select id='calendarYearSelect' class='form-control select-redirect btn-select'>
-				{% for year in range(2015, actualYear) %}
+				{% for year in range(2015, actualYear + 1) %}
 					<option value='{{
 						path(
 							'turnament_calendar',

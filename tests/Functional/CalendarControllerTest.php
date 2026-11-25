@@ -24,4 +24,19 @@ class CalendarControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
     }
+
+    public function testNextYearCalendarSelection(): void
+    {
+        $nextYear = (int) (new \DateTimeImmutable())->format('Y') + 1;
+        $client = static::createClient();
+        $client->request('GET', "/turnament/$nextYear/05");
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorCount($nextYear - 2015 + 1, '#calendarYearSelect option');
+        $this->assertSelectorTextSame('#calendarYearSelect option:first-child', '2015');
+        $this->assertSelectorTextSame('#calendarYearSelect option:last-child', (string) $nextYear);
+        $this->assertSelectorTextSame('#calendarYearSelect option[selected]', (string) $nextYear);
+        $this->assertSelectorExists("#calendarYearSelect option[selected][value='/turnament/$nextYear/05']");
+        $this->assertSelectorExists("#calendarMonthSelect option[value='/turnament/$nextYear/06']");
+    }
 }
