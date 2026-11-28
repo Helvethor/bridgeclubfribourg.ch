@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8da8171ab4c82f86fac2f217d2155efc",
+    "content-hash": "3068baa3daa4b920696bf63bc8b92263",
     "packages": [
         {
             "name": "composer/pcre",
@@ -8800,7 +8800,7 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v8.1.10",
+            "version": "v8.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
@@ -8845,7 +8845,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v8.1.10"
+                "source": "https://github.com/symfony/css-selector/tree/v8.2.0"
             },
             "funding": [
                 {
